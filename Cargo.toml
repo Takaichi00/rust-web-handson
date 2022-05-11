@@ -1,0 +1,8 @@
+[workspace]
+members = [
+  "rust-web-handson-presentation",
+  "rust-web-handson-app",
+  "rust-web-handson-domain",
+  "rust-web-handson-infra",
+  "rust-web-handson-util",
+]

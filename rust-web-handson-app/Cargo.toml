@@ -10,12 +10,3 @@ anyhow = "1.0.57"
 derive-new = "0.5.9"
 rust-web-handson-domain = {path = "../rust-web-handson-domain"}
 rust-web-handson-infra = {path = "../rust-web-handson-infra"}
-© 2022 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API

@@ -33,10 +33,33 @@ pub async fn get_all(
     }
 }
 
-// pub async fn create() -> Result<impl IntoResponse, StatusCode> {
-//     Ok((StatusCode::CREATED));
-// }
+pub async fn create() -> Result<impl IntoResponse, StatusCode> {
+    if true {
+        return Ok((StatusCode::CREATED));
+    }
 
-pub async fn create() -> StatusCode {
-    return StatusCode::CREATED;
+    return Err((StatusCode::INTERNAL_SERVER_ERROR));
+}
+
+#[cfg(test)]
+mod tests {
+    
+    use super::*;
+
+    #[tokio::test]
+    async fn createが正常に成功した場合はStatusCode_CREATEDが取得できる() {
+        let expected = StatusCode::CREATED;
+        let actual = create().await.ok();
+    
+        match actual {
+            Some(s) => {
+                let statusCode = s.into_response().status();
+                assert_eq!(statusCode, expected);
+            },
+            None => unreachable!(),
+        }
+
+        // assert_eq!(actual, expected);
+        // assert_eq!(create(), StatusCode::CREATED);
+    }
 }

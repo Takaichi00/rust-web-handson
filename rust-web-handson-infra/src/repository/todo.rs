@@ -13,6 +13,11 @@ use super::RdsRepositoryImpl;
 impl TodoRepository for RdsRepositoryImpl<Todo> {
     
     async fn get_all(&self) -> anyhow::Result<Vec<Todo>> {
+        // この 0 って何?
+        // self.pool → rds の構造体
+        // self の Rds の構造体はタプルである
+        // タプルでつけるときは名前を付けない、引数の形をとっている
+        // お作法的にはタプルでフィールド1つだったので、名前を付けていない
         let pool = self.pool.0.clone();
         let todo_list = query_as::<_, TodoTable>("select * from todo")
             .fetch_all(&*pool)

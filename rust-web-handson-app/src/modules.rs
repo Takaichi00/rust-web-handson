@@ -24,12 +24,14 @@ impl UseCaseModules {
     }
 }
 
+// Ext とついているものが外部公開するする型
 pub trait UseCaseModulesExt {
     type RepositoriesModule: RepositoriesModuleExt;
 
     fn todo_usecase(&self) -> &TodoUseCase<RepositoriesModule>;
 }
 
+// こっちが内部利用用のモジュール
 impl UseCaseModulesExt for UseCaseModules {
     type RepositoriesModule = RepositoriesModule;
 

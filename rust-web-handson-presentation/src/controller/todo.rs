@@ -1,13 +1,14 @@
-use std::sync::Arc;
+use std::{sync::Arc, ptr::null};
 
-use axum::{http::StatusCode, response::IntoResponse, routing::get, Extension, Json, Router};
+use axum::{http::StatusCode, response::IntoResponse, routing::{get, post}, Extension, Json, Router};
 use rust_web_handson_app::modules::{UseCaseModules, UseCaseModulesExt};
 
 use crate::model::todo::TodoJson;
 
 // insert をするときは route を追加 → 対応するメソッドを追加する
 pub fn router() -> Router {
-    Router::new().route("/", get(get_all))
+    return Router::new().route("/", get(get_all))
+                 .route("/", post(create));
 }
 
 pub async fn get_all(
@@ -30,4 +31,12 @@ pub async fn get_all(
             Err(StatusCode::INTERNAL_SERVER_ERROR)
         }
     }
+}
+
+// pub async fn create() -> Result<impl IntoResponse, StatusCode> {
+//     Ok((StatusCode::CREATED));
+// }
+
+pub async fn create() -> StatusCode {
+    return StatusCode::CREATED;
 }

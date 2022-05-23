@@ -17,7 +17,7 @@ pub async fn startup(router: Router) {
 
     // 共通の値をシングルトンで渡してくださいという処理
     // 例えば、AuthenticationLayer 、Controlelr にわたす前の Filter のような処理
-    // Filter の処理で Controller に
+    // Filter の処理で Controller に DI 対象のコンポーネントを渡している
     let app = router.layer(Extension(modules));
 
     axum::Server::bind(&addr)

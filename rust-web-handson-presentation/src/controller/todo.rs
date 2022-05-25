@@ -1,6 +1,6 @@
 use std::{sync::Arc, ptr::null};
 
-use axum::{http::StatusCode, response::IntoResponse, routing::{get, post}, Extension, Json, Router};
+use axum::{http::{StatusCode, HeaderMap}, response::IntoResponse, routing::{get, post}, Extension, Json, Router};
 use rust_web_handson_app::modules::{UseCaseModules, UseCaseModulesExt};
 
 use crate::model::{todo::TodoJson, todo_create_response::TodoCreateResponseJson};
@@ -35,9 +35,14 @@ pub async fn get_all(
 
 pub async fn create() -> Result<impl IntoResponse, StatusCode> {
     if true {
-        let mockResponse: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string()).await;
+        let mockResponse: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
         let body: Json<TodoCreateResponseJson> = Json(mockResponse);
-        return Ok((StatusCode::CREATED, body));
+        
+        let mut headers = HeaderMap::new();
+        headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
+
+        // TODO 下記は IntoResponse 型? どのように初期化しているか?
+        return Ok((StatusCode::CREATED, headers, body));
     }
 
     return Err((StatusCode::INTERNAL_SERVER_ERROR));
@@ -62,10 +67,27 @@ mod tests {
     
         match actual {
             Some(s) => {
+
+                let mut headers = HeaderMap::new();
+                headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
+                let mockResponse: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
+                let body: Json<TodoCreateResponseJson> = Json(mockResponse);
+
+                // let expected: IntoResponse = impl IntoResponse { 
+                //     StatusCode::CREATED, headers, body
+                // };
+
+                // assert_eq!(s, expected);
+
                 let actualStatusCode = s.into_response().status();
                 assert_eq!(actualStatusCode, expectedStatus);
+
                 
+                // TODO
                 // Response Body をどう取得するか?
+                // Header をどのように取得するか?
+                // そもそも IntoResponse 型でアサーションできないか? → これをやってしまうと test が実装を知ってしまっているのでやりたくない??
+                // L それとも test 内で 201, "Location: 'http://example'", "{ "result": true}" のように設定できるか?
 
                 // let actualJson = s.into_response().into_body().boxed().
                 // print!("{}", actualJson);

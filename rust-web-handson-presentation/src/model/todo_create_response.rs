@@ -10,7 +10,7 @@ pub struct TodoCreateResponseJson {
 }
 
 impl TodoCreateResponseJson {
-    pub async fn new (id: i64, title: String, description: String, created_at: String) -> Self {
+    pub fn new (id: i64, title: String, description: String, created_at: String) -> Self {
 
         Self {
             id,

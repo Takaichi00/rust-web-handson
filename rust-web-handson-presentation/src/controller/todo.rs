@@ -17,6 +17,8 @@ pub async fn get_all(
     // ただその設定は必要である
     Extension(modules): Extension<Arc<UseCaseModules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
+    // TODO ここでは Todo のドメインモデルを受け取っているが、pressentation 層からドメインモデルを直接いじれてしまうのは好ましくないので application 層から presentation にわたすための DTO を作ったりする。
+    // L tokio だとそうすると冗長になってしまうか?
     let todo_list = modules.todo_usecase().get_list().await;
     match todo_list {
         Ok(tl) => {
@@ -56,11 +58,22 @@ mod tests {
     use axum::body::HttpBody;
 
     use crate::model::todo_create_response::TodoCreateResponseJson;
-
+    
+    use mockall::{automock, mock, predicate::*};
+    
     use super::*;
+
+    #[cfg_attr(test, automock)]
+    impl UseCaseModules {
+
+    }
 
     #[tokio::test]
     async fn createが正常に成功した場合はStatusCode_CREATEDが取得できる() {
+
+        // TODO UseCaseModules を Mock にする
+        
+
         let expectedStatus = StatusCode::CREATED;
         // let expectedJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
         let actual = create().await.ok();
@@ -94,8 +107,5 @@ mod tests {
             },
             None => unreachable!(),
         }
-
-        // assert_eq!(actual, expected);
-        // assert_eq!(create(), StatusCode::CREATED);
     }
 }

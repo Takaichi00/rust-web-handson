@@ -1,14 +1,15 @@
-use std::sync::Arc;
+use std::{sync::Arc, ptr::null};
 
 use rust_web_handson_infra::{
     client::mysql::Rds,
     modules::{RepositoriesModule, RepositoriesModuleExt},
 };
 
-use crate::usecase::todo::TodoUseCase;
+use crate::usecase::todo::{TodoUseCase, TodoCreateUseCase};
 
 pub struct UseCaseModules {
     todo_usecase: TodoUseCase<RepositoriesModule>,
+    todo_create_usecase: TodoCreateUseCase<RepositoriesModule>
 }
 
 impl UseCaseModules {
@@ -19,8 +20,11 @@ impl UseCaseModules {
         // make usecase instances
         let todo_usecase = TodoUseCase::new(repositories.clone());
 
+        // TODO とりあえず空実装したいが、どうしたらいいのかわからない
+        let todo_create_usecase = TodoCreateUseCase::new();
+
         // make di container
-        Self { todo_usecase }
+        Self { todo_usecase, todo_create_usecase}
     }
 }
 

@@ -35,7 +35,9 @@ pub async fn get_all(
     }
 }
 
-pub async fn create() -> Result<impl IntoResponse, StatusCode> {
+pub async fn create(
+    // Extension(modules): Extension<Arc<UseCaseModules>>,
+) -> Result<impl IntoResponse, StatusCode> {
     if true {
         let mockResponse: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
         let body: Json<TodoCreateResponseJson> = Json(mockResponse);
@@ -61,21 +63,23 @@ mod tests {
     
     use mockall::{automock, mock, predicate::*};
     
+    use std::collections::HashMap;
+
     use super::*;
 
-    #[cfg_attr(test, automock)]
-    impl UseCaseModules {
+    // #[cfg_attr(test, automock)]
+    // impl UseCaseModules {
 
-    }
+    // }
 
     #[tokio::test]
     async fn createが正常に成功した場合はStatusCode_CREATEDが取得できる() {
 
         // TODO UseCaseModules を Mock にする
-        
-
         let expectedStatus = StatusCode::CREATED;
         // let expectedJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
+
+        // test 時に test 用の DI コンテナを作成する方法は??
         let actual = create().await.ok();
     
         match actual {
@@ -108,4 +112,40 @@ mod tests {
             None => unreachable!(),
         }
     }
+
+    #[tokio::test]
+    async fn sampleEtoETestAsync() -> Result<(), Box<dyn std::error::Error>> {
+
+
+        // TODO json を作って頑張ってアサーションする? それとも text → json のパースを頑張るか
+        let client = reqwest::Client::new();
+        let res = client.post("http://127.0.0.1:8080/todo")
+            .body("{}")
+            .send()
+            .await?
+            // i64 → String の キャストは勝手にやってくれなさそう...
+            .json::<HashMap<String, String>>()
+            .await?;
+
+        assert_eq!("", "");
+
+        // let resp = reqwest::get("https://httpbin.org/ip")
+        // .await?
+        // .json::<HashMap<String, String>>()
+        // .await?;
+
+        println!("{:#?}", res);
+        Ok(())
+    }
+
+    #[test]
+    fn sampleEtoETestBlocking() -> Result<(), Box<dyn std::error::Error>> {
+        let resp = reqwest::blocking::get("https://httpbin.org/get")?
+        // .json::<String>()?;
+        .text()?;
+        println!("{:#?}", resp);
+        // assert_eq!(resp, "{\n  \"args\": {}, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Host\": \"httpbin.org\", \n    \"X-Amzn-Trace-Id\": \"Root=1-628edd96-3ab7f59e2f687d615101b21b\"\n  }, \n  \"origin\": \"111.87.41.99\", \n  \"url\": \"https://httpbin.org/get\"\n}\n");
+        Ok(())
+    }
+
 }

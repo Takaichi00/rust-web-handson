@@ -9,7 +9,7 @@ use crate::usecase::todo::{TodoUseCase, TodoCreateUseCase};
 
 pub struct UseCaseModules {
     todo_usecase: TodoUseCase<RepositoriesModule>,
-    todo_create_usecase: TodoCreateUseCase<RepositoriesModule>
+    // todo_create_usecase: TodoCreateUseCase<RepositoriesModule>
 }
 
 impl UseCaseModules {
@@ -21,10 +21,13 @@ impl UseCaseModules {
         let todo_usecase = TodoUseCase::new(repositories.clone());
 
         // TODO とりあえず空実装したいが、どうしたらいいのかわからない
-        let todo_create_usecase = TodoCreateUseCase::new();
+        // let todo_create_usecase = TodoCreateUseCase::new();
 
         // make di container
-        Self { todo_usecase, todo_create_usecase}
+        Self {
+            todo_usecase,
+            // todo_create_usecase,
+        }
     }
 }
 

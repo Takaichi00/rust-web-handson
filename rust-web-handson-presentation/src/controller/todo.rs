@@ -41,7 +41,7 @@ pub async fn create(
 ) -> Result<impl IntoResponse, StatusCode> {
     if true {
 
-        modules.todo_create_usecase();
+        modules.todo_create_usecase("sample-title".to_string(), "sample-description".to_string());
 
         let mut headers = HeaderMap::new();
         headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());

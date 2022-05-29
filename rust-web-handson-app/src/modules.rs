@@ -39,7 +39,7 @@ pub trait UseCaseModulesExt {
     type RepositoriesModule: RepositoriesModuleExt;
 
     fn todo_usecase(&self) -> &TodoUseCase<RepositoriesModule>;
-    fn todo_create_usecase(&self) -> &TodoCreateUseCase<RepositoriesModule>;
+    fn todo_create_usecase(&self, title: String, description: String) -> &TodoCreateUseCase<RepositoriesModule>;
 }
 
 // こっちが内部利用用のモジュール
@@ -50,7 +50,7 @@ impl UseCaseModulesExt for UseCaseModules {
         &self.todo_usecase
     }
 
-    fn todo_create_usecase(&self) -> &TodoCreateUseCase<RepositoriesModule> {
+    fn todo_create_usecase(&self, title: String, description: String) -> &TodoCreateUseCase<RepositoriesModule> {
         &self.todo_create_usecase
     }
 }

@@ -40,7 +40,7 @@ impl<R: RepositoriesModuleExt> TodoUseCase<R> {
 }
 
 impl<R: RepositoriesModuleExt> TodoCreateUseCase<R> {
-    pub async fn create_todo(&self) -> anyhow::Result<Vec<Todo>> {
+    pub async fn create_todo(&self, title: String, description: String) -> anyhow::Result<Vec<Todo>> {
         self.repositories.todo_repository().get_all().await
     }
 }

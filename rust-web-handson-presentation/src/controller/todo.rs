@@ -8,7 +8,7 @@ use crate::model::{todo::TodoJson, todo_create_response::TodoCreateResponseJson}
 // insert をするときは route を追加 → 対応するメソッドを追加する
 pub fn router() -> Router {
     return Router::new().route("/", get(get_all))
-                 .route("/", post(create));
+                 .route("/try", post(create_try));
 }
 
 pub async fn get_all(
@@ -35,7 +35,7 @@ pub async fn get_all(
     }
 }
 
-pub async fn create(
+pub async fn create_try(
     // Extension(modules): Extension<Arc<UseCaseModules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
     if true {
@@ -80,7 +80,7 @@ mod tests {
         // let expectedJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
 
         // test 時に test 用の DI コンテナを作成する方法は??
-        let actual = create().await.ok();
+        let actual = create_try().await.ok();
     
         match actual {
             Some(s) => {

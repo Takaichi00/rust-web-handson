@@ -5,11 +5,11 @@ use rust_web_handson_infra::{
     modules::{RepositoriesModule, RepositoriesModuleExt},
 };
 
-use crate::usecase::todo::{TodoUseCase, TodoCreateUseCase};
+use crate::usecase::todo::{TodoUseCase};
 
 pub struct UseCaseModules {
     todo_usecase: TodoUseCase<RepositoriesModule>,
-    todo_create_usecase: TodoCreateUseCase<RepositoriesModule>
+    todo_create_usecase: TodoUseCase<RepositoriesModule>
 }
 
 impl UseCaseModules {
@@ -19,11 +19,11 @@ impl UseCaseModules {
 
         // make usecase instances
         let todo_usecase = TodoUseCase::new(repositories.clone());
-        let todo_create_usecase = TodoCreateUseCase::new(repositories.clone());
+        let todo_create_usecase = TodoUseCase::new(repositories.clone());
 
 
         // TODO とりあえず空実装したいが、どうしたらいいのかわからない
-        // let todo_create_try_usecase = TodoCreateTryUseCase::new();
+        // let todo_create_try_usecase = TodoUseCase::new();
 
         // make di container
         Self {
@@ -39,7 +39,7 @@ pub trait UseCaseModulesExt {
     type RepositoriesModule: RepositoriesModuleExt;
 
     fn todo_usecase(&self) -> &TodoUseCase<RepositoriesModule>;
-    fn todo_create_usecase(&self, title: String, description: String) -> &TodoCreateUseCase<RepositoriesModule>;
+    fn todo_create_usecase(&self, title: String, description: String) -> &TodoUseCase<RepositoriesModule>;
 }
 
 // こっちが内部利用用のモジュール
@@ -50,7 +50,7 @@ impl UseCaseModulesExt for UseCaseModules {
         &self.todo_usecase
     }
 
-    fn todo_create_usecase(&self, title: String, description: String) -> &TodoCreateUseCase<RepositoriesModule> {
+    fn todo_create_usecase(&self, title: String, description: String) -> &TodoUseCase<RepositoriesModule> {
         &self.todo_create_usecase
     }
 }

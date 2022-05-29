@@ -39,17 +39,22 @@ pub async fn get_all(
 pub async fn create(
     Extension(modules): Extension<Arc<UseCaseModules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
-    if true {
 
-        modules.todo_create_usecase("sample-title".to_string(), "sample-description".to_string());
+    // await 忘れがち...
+    let result = modules.todo_usecase().create_todo("sample-title".to_string(), "sample-description".to_string()).await;
 
-        let mut headers = HeaderMap::new();
-        headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
+    match result {
+        Ok(_result) => {
+            let mut headers = HeaderMap::new();
+            headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
 
-        return Ok((StatusCode::CREATED, headers));
+            return Ok((StatusCode::CREATED, headers));
+        }
+        Err(e) => {
+            tracing::error!("Error : {}", e);
+            return Err((StatusCode::INTERNAL_SERVER_ERROR));       
+        }
     }
-
-    return Err((StatusCode::INTERNAL_SERVER_ERROR));
 }
 
 

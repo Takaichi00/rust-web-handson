@@ -38,7 +38,7 @@ impl TodoRepository for RdsRepositoryImpl<Todo> {
 
     async fn insert(&self, source: NewTodo) -> anyhow::Result<()> {
         let pool = self.pool.0.clone();
-        sqlx::query("insert into todo (name, description) values (?, ?)")
+        sqlx::query("insert into todo (title, description) values (?, ?)")
             .bind(source.title)
             .bind(source.description)
             .execute(&*pool)

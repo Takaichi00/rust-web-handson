@@ -8,7 +8,8 @@ use crate::model::{todo::TodoJson, todo_create_response::TodoCreateResponseJson}
 // insert をするときは route を追加 → 対応するメソッドを追加する
 pub fn router() -> Router {
     return Router::new().route("/", get(get_all))
-                 .route("/try", post(create_try));
+                        .route("/", post(create))
+                        .route("/try", post(create_try));
 }
 
 pub async fn get_all(
@@ -34,6 +35,25 @@ pub async fn get_all(
         }
     }
 }
+
+pub async fn create(
+    Extension(modules): Extension<Arc<UseCaseModules>>,
+) -> Result<impl IntoResponse, StatusCode> {
+    if true {
+
+        modules.todo_create_usecase();
+
+        let mut headers = HeaderMap::new();
+        headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
+
+        return Ok((StatusCode::CREATED, headers));
+    }
+
+    return Err((StatusCode::INTERNAL_SERVER_ERROR));
+}
+
+
+
 
 pub async fn create_try(
     // Extension(modules): Extension<Arc<UseCaseModules>>,

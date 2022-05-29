@@ -3,7 +3,7 @@ use std::{sync::Arc, ptr::null};
 use axum::{http::{StatusCode, HeaderMap}, response::IntoResponse, routing::{get, post}, Extension, Json, Router};
 use rust_web_handson_app::modules::{UseCaseModules, UseCaseModulesExt};
 
-use crate::model::{todo::TodoJson, todo_create_response::TodoCreateResponseJson};
+use crate::model::{todo::TodoJson, todo_create_response::TodoCreateResponseJson, todo_create_request::TodoCreateRequestJson};
 
 // insert をするときは route を追加 → 対応するメソッドを追加する
 pub fn router() -> Router {
@@ -37,11 +37,13 @@ pub async fn get_all(
 }
 
 pub async fn create(
+    Json(request_json): Json<TodoCreateRequestJson>,
     Extension(modules): Extension<Arc<UseCaseModules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
 
     // await 忘れがち...
-    let result = modules.todo_usecase().create_todo("sample-title".to_string(), "sample-description".to_string()).await;
+    // TODO clone() でいいのか? それとも &String で受けたほうがよい?
+    let result = modules.todo_usecase().create_todo(request_json.getTitle().clone(), request_json.getDescription().clone()).await;
 
     match result {
         Ok(_result) => {

@@ -113,9 +113,9 @@ mod tests {
         }
     }
 
+    // TODO 以下 EtoE テスト、別ディレクトリに分ける方法はどのようにするか?
     #[tokio::test]
     async fn sampleEtoETestAsync() -> Result<(), Box<dyn std::error::Error>> {
-
 
         // TODO json を作って頑張ってアサーションする? それとも text → json のパースを頑張るか
         let client = reqwest::Client::new();
@@ -123,7 +123,7 @@ mod tests {
             .body("{}")
             .send()
             .await?
-            // i64 → String の キャストは勝手にやってくれなさそう...
+            // TODO i64 → String の キャストは勝手にやってくれなさそう...
             .json::<HashMap<String, String>>()
             .await?;
 

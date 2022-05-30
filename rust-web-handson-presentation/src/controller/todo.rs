@@ -147,14 +147,15 @@ mod tests {
         // TODO json を作って頑張ってアサーションする? それとも text → json のパースを頑張るか
         let client = reqwest::Client::new();
         let res = client.post("http://127.0.0.1:8080/todo")
-            .body("{}")
+            .body("{ \"title\": \"hogehgoe\", \"description\": \"fugafuga\" }")
+            .header("Content-Type", "application/json")
             .send()
-            .await?
-            // TODO i64 → String の キャストは勝手にやってくれなさそう...
-            .json::<HashMap<String, String>>()
             .await?;
+            // TODO i64 → String の キャストは勝手にやってくれなさそう...
+            // .json::<HashMap<String, String>>()
+            // .await?;
 
-        assert_eq!("", "");
+        assert_eq!(res.status(), 201);
 
         // let resp = reqwest::get("https://httpbin.org/ip")
         // .await?

@@ -9,7 +9,8 @@ use crate::usecase::todo::{TodoUseCase};
 
 pub struct UseCaseModules {
     todo_usecase: TodoUseCase<RepositoriesModule>,
-    todo_create_usecase: TodoUseCase<RepositoriesModule>
+    todo_create_usecase: TodoUseCase<RepositoriesModule>,
+    // todo_create_try_usecase: TodoUseCase<>
 }
 
 impl UseCaseModules {
@@ -28,7 +29,7 @@ impl UseCaseModules {
         // make di container
         Self {
             todo_usecase,
-            todo_create_usecase
+            todo_create_usecase,
             // todo_create_try_usecase,
         }
     }

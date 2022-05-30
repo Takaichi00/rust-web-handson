@@ -29,20 +29,32 @@ impl<R: RepositoriesModuleExt> TodoUseCase<R> {
 }
 
 impl<R: RepositoriesModuleExt> TodoUseCase<R> {
+    // TODO presentation → application の DTO は最初のうちは作らずに、presentation そうで Domain モデルを組み立ててしまう方針とする
     pub async fn create_todo(&self, title: String, description: String) -> anyhow::Result<()> {
         // await 忘れがち part2...
-        let result = self.repositories.todo_repository().insert(NewTodo::new(title, description)).await;
+        // NewTodo を presentation で作成するかどうか?
+        // let result = self.repositories.todo_repository().insert(NewTodo::new(title, description)).await;
 
-        // TODO result で match しないと関数が実行されないのはどういう仕様??
-        // self.repositories.todo_repository().insert(NewTodo::new(title, description)).await; だけでは処理が実行されない
-        match result {
-            Ok(_result) => {
-                Ok(())
-            }
-            Err(e) => {
-                Err(e)
-            }
-        }
+        // self.repositories.todo_repository().insert(NewTodo::new(title, description)).await.map(|op| Ok(op))? → これは↓と同義。map okを wrap してそれを ? で展開しているので冗長
+        self.repositories.todo_repository().insert(NewTodo::new(title, description)).await
+        // ? が () or Err(e) を返す match 文をかいてくれる
+        // ラムダ式 (|op|) で Ok(()) としてあげることで置き換えることができる
+        // map → Ok のときにこういう内部処理をしてくださいねということをしている
+        // map_err() → エラーのときにこういうことをしてくださいを定義できる
+        // いちいち match でやるとコードの長さが多くなるので、 map, map_err で記載することが多い
+
+        // TODO result で match しないと関数が実行されないのはどういう仕様?? → 実行されます。
+        // self.repositories.todo_repository().insert(NewTodo::new(title, description)).await
+        // match result {
+        //     Ok(_result) => {
+        //         Ok(())
+        //     }
+        //     Err(e) => {
+        //         Err(e)
+        //     }
+        // }
+
+
     }
 }
 

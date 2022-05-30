@@ -43,6 +43,8 @@ pub async fn create(
 
     // await 忘れがち...
     // TODO clone() でいいのか? それとも &String で受けたほうがよい?
+    // getTitle() の中で .clone を実行するのがベター。参照を返すというのはそんなにしない。
+    // int, string などもともとある型が大半。
     let result = modules.todo_usecase().create_todo(request_json.getTitle().clone(), request_json.getDescription().clone()).await;
 
     match result {
@@ -106,7 +108,7 @@ mod tests {
         let expectedStatus = StatusCode::CREATED;
         // let expectedJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
 
-        // test 時に test 用の DI コンテナを作成する方法は??
+        // TODO test 時に test 用の DI コンテナを作成する方法は??
         let actual = create_try().await.ok();
     
         match actual {
@@ -140,6 +142,9 @@ mod tests {
         }
     }
 
+
+
+    
     // TODO 以下 EtoE テスト、別ディレクトリに分ける方法はどのようにするか?
     #[tokio::test]
     async fn sampleEtoETestAsync() -> Result<(), Box<dyn std::error::Error>> {

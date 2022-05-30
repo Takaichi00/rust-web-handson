@@ -23,7 +23,7 @@ impl TodoRepository for RdsRepositoryImpl<Todo> {
             .fetch_all(&*pool)
             .await?;
             // Ok(a) => a, Err(e) => Err(e) と同義
-            // await? はエラーだったら中身を取り出し、エラーじゃかなったらエラーを出すという意味と同じ
+            // await? はエラーじゃなかったらだったら中身を取り出し、エラーだったらエラーを出すという意味と同じ
         todo_list.into_iter().map(|t| Todo::try_from(t)).collect()
         
         // iterator の方に変換

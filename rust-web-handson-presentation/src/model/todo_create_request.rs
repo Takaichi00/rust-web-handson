@@ -32,6 +32,10 @@ impl TodoCreateRequestJson {
 
 // from trait を実装する
 impl From<TodoCreateRequestJson> for NewTodo {
+
+    // From には Error の概念がないのでいらない。TryFrom には必要
+    // type Error = anyhow::Error;
+
     // from メソッドを実装
     fn from(todo_create_requet_json: TodoCreateRequestJson) -> Self {
         NewTodo::new(

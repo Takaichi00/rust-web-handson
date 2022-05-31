@@ -1,7 +1,15 @@
 use std::{sync::Arc};
 
 use axum::{http::{StatusCode, HeaderMap}, response::IntoResponse, routing::{get, post}, Extension, Json, Router};
-use rust_web_handson_app::modules::{UseCaseModules, UseCaseModulesExt};
+
+use mockall_double::*;
+
+#[cfg(test)]
+use mockall::*;
+
+// #[double]
+use rust_web_handson_app::modules::UseCaseModules;
+use rust_web_handson_app::modules::UseCaseModulesExt;
 use rust_web_handson_domain::model::todo::NewTodo;
 
 use crate::model::{todo::TodoJson, todo_create_response::TodoCreateResponseJson, todo_create_request::TodoCreateRequestJson};
@@ -77,7 +85,7 @@ pub async fn create(
  */
 pub async fn create_try(
     Json(request_json): Json<TodoCreateRequestJson>,
-    // Extension(modules): Extension<Arc<UseCaseModules>>,
+    Extension(modules): Extension<Arc<UseCaseModules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
     if true {
         let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
@@ -93,50 +101,60 @@ pub async fn create_try(
     return Err((StatusCode::INTERNAL_SERVER_ERROR));
 }
 
+
 #[cfg(test)]
 mod tests {
     
     use std::fmt::Debug;
 
     use axum::body::HttpBody;
+    use rust_web_handson_app::modules::UseCaseModules;
 
     use crate::model::todo_create_response::TodoCreateResponseJson;
     
-    use mockall::{automock, mock, predicate::*};
-    
     use std::collections::HashMap;
 
-    use super::*;
+    use mockall_double::*;
 
-    // #[cfg_attr(test, automock)]
-    // impl UseCaseModules {
-
-    // }
+    // #[double]
+    // use rust_web_handson_app::modules::MockUseCaseModules;
 
     #[tokio::test]
     async fn createが正常に成功した場合はStatusCode_CREATEDが取得できる() {
 
+        // setup 
         // TODO UseCaseModules を Mock にする
-        let expected_status = StatusCode::CREATED;
-        // let expectedJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
-
         // TODO test 時に test 用の DI コンテナを作成する方法は??
-        let actual = create_try(Json(TodoCreateRequestJson::new("test-title".to_string(), "test-description".to_string()))).await.unwrap();
+
+        // #[derive(UseCaseModules)]
+        // struct MockUseCase {
+            
+        // }
+
+        // let mock_usecase = 
+
+        // let expected_status = StatusCode::CREATED;
+        
+        // execute
+        // let actual = create_try(Json(TodoCreateRequestJson::new("test-title".to_string(), "test-description".to_string())), mock_usecase)
+        //                                         .await
+        //                                         .unwrap();
 
 
-        let mut headers = HeaderMap::new();
-        headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
-        let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
-        let body: Json<TodoCreateResponseJson> = Json(mock_response);
+        // let mut headers = HeaderMap::new();
+        // headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
+        // let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
+        // let body: Json<TodoCreateResponseJson> = Json(mock_response);
 
-        // let expected: IntoResponse = impl IntoResponse { 
-        //     StatusCode::CREATED, headers, body
-        // };
+        // // let expected: IntoResponse = impl IntoResponse { 
+        // //     StatusCode::CREATED, headers, body
+        // // };
 
-        // assert_eq!(s, expected);
+        // // assert_eq!(s, expected);
 
-        let actual_status_code = actual.into_response().status().clone();
-        assert_eq!(actual_status_code, expected_status);
+        // // assert
+        // let actual_status_code = actual.into_response().status().clone();
+        // assert_eq!(actual_status_code, expected_status);
 
         
         // TODO

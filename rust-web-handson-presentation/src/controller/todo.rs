@@ -1,4 +1,4 @@
-use std::{sync::Arc, ptr::null};
+use std::{sync::Arc};
 
 use axum::{http::{StatusCode, HeaderMap}, response::IntoResponse, routing::{get, post}, Extension, Json, Router};
 use rust_web_handson_app::modules::{UseCaseModules, UseCaseModulesExt};
@@ -13,6 +13,9 @@ pub fn router() -> Router {
                         .route("/try", post(create_try));
 }
 
+/**
+ * Todo を取得する.
+ */
 pub async fn get_all(
     // Extension → DI するためのコンテナになる
     // acsim が定義された Extension を Controller に渡している
@@ -37,6 +40,9 @@ pub async fn get_all(
     }
 }
 
+/**
+ * Todo を作成する (Hands On ver)
+ */
 pub async fn create(
     Json(request_json): Json<TodoCreateRequestJson>,
     Extension(modules): Extension<Arc<UseCaseModules>>,
@@ -59,20 +65,22 @@ pub async fn create(
         }
         Err(e) => {
             tracing::error!("Error : {}", e);
-            return Err((StatusCode::INTERNAL_SERVER_ERROR));       
+            return Err(StatusCode::INTERNAL_SERVER_ERROR);       
         }
     }
 }
 
 
 
-
+/**
+ * Todo を作成する (Try バージョン)
+ */
 pub async fn create_try(
     // Extension(modules): Extension<Arc<UseCaseModules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
     if true {
-        let mockResponse: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
-        let body: Json<TodoCreateResponseJson> = Json(mockResponse);
+        let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
+        let body: Json<TodoCreateResponseJson> = Json(mock_response);
         
         let mut headers = HeaderMap::new();
         headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());

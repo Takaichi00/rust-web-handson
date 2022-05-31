@@ -1,4 +1,4 @@
-use std::{sync::Arc, ptr::null};
+use std::{sync::Arc};
 
 use rust_web_handson_infra::{
     client::mysql::Rds,
@@ -40,7 +40,7 @@ pub trait UseCaseModulesExt {
     type RepositoriesModule: RepositoriesModuleExt;
 
     fn todo_usecase(&self) -> &TodoUseCase<RepositoriesModule>;
-    fn todo_create_usecase(&self, title: String, description: String) -> &TodoUseCase<RepositoriesModule>;
+    fn todo_create_usecase(&self) -> &TodoUseCase<RepositoriesModule>;
 }
 
 // こっちが内部利用用のモジュール
@@ -51,7 +51,7 @@ impl UseCaseModulesExt for UseCaseModules {
         &self.todo_usecase
     }
 
-    fn todo_create_usecase(&self, title: String, description: String) -> &TodoUseCase<RepositoriesModule> {
+    fn todo_create_usecase(&self) -> &TodoUseCase<RepositoriesModule> {
         &self.todo_create_usecase
     }
 }

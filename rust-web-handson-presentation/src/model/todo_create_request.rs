@@ -19,12 +19,13 @@ impl TodoCreateRequestJson {
         }
     }
 
-    // この時点で参照を渡している
-    pub fn getTitle(&self) -> &String {
+    // この時点で参照を渡しているが、getter で指定したいならここで clone してしまったほうが良い
+    // 基本的にはフィールドを public にして対応する
+    pub fn get_title(&self) -> &String {
         &self.title
     }
 
-    pub fn getDescription(&self) -> &String {
+    pub fn get_description(&self) -> &String {
         &self.description
     }
 }

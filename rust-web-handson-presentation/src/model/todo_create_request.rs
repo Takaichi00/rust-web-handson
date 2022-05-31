@@ -1,3 +1,4 @@
+use rust_web_handson_domain::model::todo::NewTodo;
 use serde::{Deserialize};
 
 // フィールドは public にしてもいいかな...?　どっちでもいい。
@@ -5,8 +6,8 @@ use serde::{Deserialize};
 // ボイラープレート... プログラム上必要なんだけど冗長なコード
 #[derive(Deserialize, Debug)]
 pub struct TodoCreateRequestJson {
-    title: String,
-    description: String
+    pub title: String,
+    pub description: String
 }
 
 impl TodoCreateRequestJson {
@@ -30,6 +31,12 @@ impl TodoCreateRequestJson {
 
 // TODO
 // from trait を実装する
-// impl From<TodoCreateRequestJson> for NewTodo {
-//     // from メソッドを実装
-// }
+impl From<TodoCreateRequestJson> for NewTodo {
+    // from メソッドを実装
+    fn from(todo_create_requet_json: TodoCreateRequestJson) -> Self {
+        NewTodo::new(
+            todo_create_requet_json.title,
+            todo_create_requet_json.description,
+        )
+    }
+}

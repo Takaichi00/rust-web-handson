@@ -30,13 +30,13 @@ impl<R: RepositoriesModuleExt> TodoUseCase<R> {
 
 impl<R: RepositoriesModuleExt> TodoUseCase<R> {
     // TODO presentation → application の DTO は最初のうちは作らずに、presentation そうで Domain モデルを組み立ててしまう方針とする
-    pub async fn create_todo(&self, title: String, description: String) -> anyhow::Result<()> {
+    pub async fn create_todo(&self, newTodo: NewTodo) -> anyhow::Result<()> {
         // await 忘れがち part2...
         // NewTodo を presentation で作成するかどうか?
         // let result = self.repositories.todo_repository().insert(NewTodo::new(title, description)).await;
 
         // self.repositories.todo_repository().insert(NewTodo::new(title, description)).await.map(|op| Ok(op))? → これは↓と同義。map okを wrap してそれを ? で展開しているので冗長
-        self.repositories.todo_repository().insert(NewTodo::new(title, description)).await
+        self.repositories.todo_repository().insert(newTodo).await
         // ? が () or Err(e) を返す match 文をかいてくれる
         // ラムダ式 (|op|) で Ok(()) としてあげることで置き換えることができる
         // map → Ok のときにこういう内部処理をしてくださいねということをしている

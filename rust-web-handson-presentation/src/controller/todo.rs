@@ -2,6 +2,7 @@ use std::{sync::Arc, ptr::null};
 
 use axum::{http::{StatusCode, HeaderMap}, response::IntoResponse, routing::{get, post}, Extension, Json, Router};
 use rust_web_handson_app::modules::{UseCaseModules, UseCaseModulesExt};
+use rust_web_handson_domain::model::todo::NewTodo;
 
 use crate::model::{todo::TodoJson, todo_create_response::TodoCreateResponseJson, todo_create_request::TodoCreateRequestJson};
 
@@ -45,7 +46,9 @@ pub async fn create(
     // TODO clone() でいいのか? それとも &String で受けたほうがよい?
     // getTitle() の中で .clone を実行するのがベター。参照を返すというのはそんなにしない。
     // int, string などもともとある型が大半。
-    let result = modules.todo_usecase().create_todo(request_json.getTitle().clone(), request_json.getDescription().clone()).await;
+    let result = modules.todo_usecase()
+                                           .create_todo(NewTodo::from(request_json))
+                                           .await;
 
     match result {
         Ok(_result) => {

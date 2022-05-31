@@ -116,41 +116,37 @@ mod tests {
     async fn createが正常に成功した場合はStatusCode_CREATEDが取得できる() {
 
         // TODO UseCaseModules を Mock にする
-        let expectedStatus = StatusCode::CREATED;
+        let expected_status = StatusCode::CREATED;
         // let expectedJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
 
         // TODO test 時に test 用の DI コンテナを作成する方法は??
-        let actual = create_try().await.ok();
-    
-        match actual {
-            Some(s) => {
+        let actual = create_try().await.unwrap();
 
-                let mut headers = HeaderMap::new();
-                headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
-                let mockResponse: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
-                let body: Json<TodoCreateResponseJson> = Json(mockResponse);
 
-                // let expected: IntoResponse = impl IntoResponse { 
-                //     StatusCode::CREATED, headers, body
-                // };
+        let mut headers = HeaderMap::new();
+        headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
+        let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
+        let body: Json<TodoCreateResponseJson> = Json(mock_response);
 
-                // assert_eq!(s, expected);
+        // let expected: IntoResponse = impl IntoResponse { 
+        //     StatusCode::CREATED, headers, body
+        // };
 
-                let actualStatusCode = s.into_response().status();
-                assert_eq!(actualStatusCode, expectedStatus);
+        // assert_eq!(s, expected);
 
-                
-                // TODO
-                // Response Body をどう取得するか?
-                // Header をどのように取得するか?
-                // そもそも IntoResponse 型でアサーションできないか? → これをやってしまうと test が実装を知ってしまっているのでやりたくない??
-                // L それとも test 内で 201, "Location: 'http://example'", "{ "result": true}" のように設定できるか?
+        let actual_status_code = actual.into_response().status().clone();
+        assert_eq!(actual_status_code, expected_status);
 
-                // let actualJson = s.into_response().into_body().boxed().
-                // print!("{}", actualJson);
-            },
-            None => unreachable!(),
-        }
+        
+        // TODO
+        // Response Body をどう取得するか?
+        // Header をどのように取得するか?
+        // そもそも IntoResponse 型でアサーションできないか? → これをやってしまうと test が実装を知ってしまっているのでやりたくない??
+        // L それとも test 内で 201, "Location: 'http://example'", "{ "result": true}" のように設定できるか?
+
+        // let actual_json = actual.into_response().into_body();
+        // print!("{}", actualJson);
+
     }
 
 }

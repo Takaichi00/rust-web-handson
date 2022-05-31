@@ -30,7 +30,6 @@ impl TodoCreateRequestJson {
     }
 }
 
-// TODO
 // from trait を実装する
 impl From<TodoCreateRequestJson> for NewTodo {
     // from メソッドを実装

@@ -76,6 +76,7 @@ pub async fn create(
  * Todo を作成する (Try バージョン)
  */
 pub async fn create_try(
+    Json(request_json): Json<TodoCreateRequestJson>,
     // Extension(modules): Extension<Arc<UseCaseModules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
     if true {
@@ -120,7 +121,7 @@ mod tests {
         // let expectedJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
 
         // TODO test 時に test 用の DI コンテナを作成する方法は??
-        let actual = create_try().await.unwrap();
+        let actual = create_try(Json(TodoCreateRequestJson::new("test-title".to_string(), "test-description".to_string()))).await.unwrap();
 
 
         let mut headers = HeaderMap::new();

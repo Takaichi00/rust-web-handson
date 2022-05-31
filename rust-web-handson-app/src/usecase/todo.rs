@@ -59,7 +59,7 @@ impl<R: RepositoriesModuleExt> TodoUseCase<R> {
 }
 
 impl<R: RepositoriesModuleExt> TodoUseCase<R> {
-        // pub async fn create_todo(&self, title: String, description: String) -> anyhow::Result<Vec<Todo>> {
+        // pub async fn create_todo_try(&self, title: String, description: String) -> anyhow::Result<Vec<Todo>> {
         //     // TODO とりあえず空実装したいが、どうしたらいいのかわからない
         //     // Java だと return null; とかで Mock の開発ができるが、それをやりたい
         //     Ok((null()));

@@ -8,18 +8,9 @@ use crate::client::mysql::Rds;
 #[derive(new)]
 pub struct RdsRepositoryImpl<T> {
     pool: Rds,
-    
-    // コンパイル時に完全に無視されるデータ
-    // RdsRepositoryImpl<Todo> という型を作ってくれる
-    // RdsRepositoryImpl<New> とは全く別のクラス
-    // Uuid<User>, Uuid<BidReq>, Uuid<ad>
-    // impl Uuid { fn generate() -> {} } というので書くことができる
-    // 型としてサポートしてくれる
-    // TryFrom<T> も同じことをしている
-    _marker: PhantomData<T>,
+    _marker: PhantomData<T>
 }
 
 // TODO kawachi さんのリポジトリ参照
-// ここで new できるようにしている
-
+// ここで new できるようにしている?
 pub mod todo;

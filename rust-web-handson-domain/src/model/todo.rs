@@ -2,9 +2,6 @@
 use chrono::{DateTime, Local};
 use derive_new::new;
 
-// Debug → println をするために継承している
-// new → derive_new というクラスになる
-// Lombok みたいなもの
 #[derive(new, Debug, PartialEq, Clone)] // test のアサーションのために PartialEq, Clone を実装する
 pub struct Todo {
     pub id: i64,
@@ -15,7 +12,6 @@ pub struct Todo {
     pub deleted_at: Option<DateTime<Local>>,
 }
 
-// new したときに id なんて入れられないよ〜というために↓を作る
 #[derive(new, Debug)]
 pub struct NewTodo {
     pub title: String,

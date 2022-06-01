@@ -10,18 +10,6 @@ pub struct TodoUseCase<R: RepositoriesModuleExt> {
     repositories: Arc<R>,
 }
 
-// 以下のようにもかけるが、実行時解析になってしまう
-/**
- * pub struct TodoUseCase {
-    repositories: Arc<dyn RepositoriesModuleExt>,
-}
-*/
-
-
-/*
- * ↓ Impl
- */
-
 #[automock]
 impl<R: RepositoriesModuleExt> TodoUseCase<R> {
     pub async fn get_list(&self) -> anyhow::Result<Vec<Todo>> {
@@ -30,32 +18,8 @@ impl<R: RepositoriesModuleExt> TodoUseCase<R> {
 }
 
 impl<R: RepositoriesModuleExt> TodoUseCase<R> {
-    // TODO presentation → application の DTO は最初のうちは作らずに、presentation そうで Domain モデルを組み立ててしまう方針とする
     pub async fn create_todo(&self, new_todo: NewTodo) -> anyhow::Result<()> {
-        // await 忘れがち part2...
-        // NewTodo を presentation で作成するかどうか?
-        // let result = self.repositories.todo_repository().insert(NewTodo::new(title, description)).await;
-
-        // self.repositories.todo_repository().insert(NewTodo::new(title, description)).await.map(|op| Ok(op))? → これは↓と同義。map okを wrap してそれを ? で展開しているので冗長
         self.repositories.todo_repository().insert(new_todo).await
-        // ? が () or Err(e) を返す match 文をかいてくれる
-        // ラムダ式 (|op|) で Ok(()) としてあげることで置き換えることができる
-        // map → Ok のときにこういう内部処理をしてくださいねということをしている
-        // map_err() → エラーのときにこういうことをしてくださいを定義できる
-        // いちいち match でやるとコードの長さが多くなるので、 map, map_err で記載することが多い
-
-        // TODO result で match しないと関数が実行されないのはどういう仕様?? → 実行されます。
-        // self.repositories.todo_repository().insert(NewTodo::new(title, description)).await
-        // match result {
-        //     Ok(_result) => {
-        //         Ok(())
-        //     }
-        //     Err(e) => {
-        //         Err(e)
-        //     }
-        // }
-
-
     }
 }
 
@@ -77,6 +41,8 @@ mod test {
 
     #[tokio::test]
     async fn test_get_list() -> () {
+        
+        // setup
         let mut mock_repositories = MockRepositoriesModuleExt::new();
         let mut mock_todo_repo = MockTodoRepository::new();
 
@@ -103,6 +69,8 @@ mod test {
             .return_const(mock_todo_repo);
 
         let todo_usecase = TodoUseCase::new(Arc::new(mock_repositories));
+
+        // execte
         let result = todo_usecase.get_list().await;
 
         let expect = vec![Todo::new(
@@ -113,7 +81,8 @@ mod test {
             now.clone(),
             Some(now.clone()),
         )];
-
+        
+        // assert
         assert_eq!(result.unwrap(), expect);
     }
 }

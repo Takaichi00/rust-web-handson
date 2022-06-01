@@ -13,27 +13,11 @@ use super::RdsRepositoryImpl;
 impl TodoRepository for RdsRepositoryImpl<Todo> {
     
     async fn get_all(&self) -> anyhow::Result<Vec<Todo>> {
-        // この 0 って何?
-        // self.pool → rds の構造体
-        // self の Rds の構造体はタプルである
-        // タプルでつけるときは名前を付けない、引数の形をとっている
-        // お作法的にはタプルでフィールド1つだったので、名前を付けていない
         let pool = self.pool.0.clone();
         let todo_list = query_as::<_, TodoTable>("select * from todo")
             .fetch_all(&*pool)
             .await?;
-            // Ok(a) => a, Err(e) => Err(e) と同義
-            // await? はエラーじゃなかったらだったら中身を取り出し、エラーだったらエラーを出すという意味と同じ
         todo_list.into_iter().map(|t| Todo::try_from(t)).collect()
-        
-        // iterator の方に変換
-        // 色々やった処理を collect で元の処理に戻す
-        // collect にしないと、無限に collect のまま
-        // into_iter → 実体が渡る, iter → 借用, iter_mut → mutable が渡る
-        // 実行するだけでいいなら借用など→難関
-        // map とかやるときに、脳死で todo_list.iter().map → t でやるとき、「t に方があればいいのにとなったら、into_iter を使う」
-        // (|t|) は t=> と同じ
-        // try_from が result を返してくる
     }
 
     async fn insert(&self, source: NewTodo) -> anyhow::Result<()> {

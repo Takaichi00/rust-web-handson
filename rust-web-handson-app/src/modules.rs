@@ -9,7 +9,6 @@ use crate::usecase::todo::{TodoUseCase};
 
 use mockall::automock;
 
-// struct なので、mockall double を使う
 pub struct UseCaseModules {
     todo_usecase: TodoUseCase<RepositoriesModule>,
     todo_create_usecase: TodoUseCase<RepositoriesModule>,
@@ -46,31 +45,3 @@ impl UseCaseModules {
         &self.todo_create_usecase
     }
 }
-
-// Ext とついているものが外部公開するする型
-// Mock にするときは↓を Mock にするが、メソッド数分 mock にするのは大変
-// これを解決するのが Mockall というライブラリ。TodoUseCase の空を返す。
-// ↑ に加えて、expect_~~ というメソッドがはえる
-// 空を返す struct は MockUseCaseModulesExt という命名になる
-// pub trait UseCaseModulesExt {
-//     type RepositoriesModule: RepositoriesModuleExt;
-//
-//     fn todo_usecase(&self) -> &TodoUseCase<RepositoriesModule>;
-//     fn todo_create_usecase(&self) -> &TodoUseCase<RepositoriesModule>;
-// }
-//
-// // こっちが内部利用用のモジュール
-// impl UseCaseModulesExt for UseCaseModules {
-//     type RepositoriesModule = RepositoriesModule;
-//
-//     fn todo_usecase(&self) -> &TodoUseCase<RepositoriesModule> {
-//         &self.todo_usecase
-//     }
-//
-//     // usecase の struct を渡してあげる
-//     // usecase のテストをする場合、UseCaseModulesExt の trait を実装してあげる必要がある
-//     // イメージ的には todo_create_usecase をオーバーライドすることでモックにすることができる
-//     fn todo_create_usecase(&self) -> &TodoUseCase<RepositoriesModule> {
-//         &self.todo_create_usecase
-//     }
-// }

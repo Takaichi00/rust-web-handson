@@ -21,18 +21,11 @@ pub fn router() -> Router {
  * Todo を取得する.
  */
 pub async fn get_all(
-    // Extension → DI するためのコンテナになる
-    // acsim が定義された Extension を Controller に渡している
-    // ただその設定は必要である
     Extension(modules): Extension<Arc<UseCaseModules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
-    // TODO ここでは Todo のドメインモデルを受け取っているが、pressentation 層からドメインモデルを直接いじれてしまうのは好ましくないので application 層から presentation にわたすための DTO を作ったりする。
-    // L tokio だとそうすると冗長になってしまうか?
     let todo_list = modules.todo_usecase().get_list().await;
     match todo_list {
         Ok(tl) => {
-            // ここだけ型定義している
-            // collect したとき、アサーションがうまくできない。もらっているものがわからない
             let body: Json<Vec<TodoJson>> =
                 Json(tl.into_iter().map(|t| TodoJson::from(t)).collect());
             Ok((StatusCode::OK, body))
@@ -52,10 +45,6 @@ pub async fn create(
     Extension(modules): Extension<Arc<UseCaseModules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
 
-    // await 忘れがち...
-    // TODO clone() でいいのか? それとも &String で受けたほうがよい?
-    // getTitle() の中で .clone を実行するのがベター。参照を返すというのはそんなにしない。
-    // int, string などもともとある型が大半。
     let result = modules.todo_usecase()
                                            .create_todo(NewTodo::from(request_json))
                                            .await;
@@ -73,8 +62,6 @@ pub async fn create(
         }
     }
 }
-
-
 
 /**
  * Todo を作成する (Try バージョン)

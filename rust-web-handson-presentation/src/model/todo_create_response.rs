@@ -1,12 +1,12 @@
 // use rust_web_handson_domain::model::todo::Todo;
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct TodoCreateResponseJson {
-    id: i64,
-    title: String,
-    description: String,
-    created_at: String,
+    pub id: i64,
+    pub title: String,
+    pub description: String,
+    pub created_at: String,
 }
 
 impl TodoCreateResponseJson {

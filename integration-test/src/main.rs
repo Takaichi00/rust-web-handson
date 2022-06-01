@@ -2,41 +2,49 @@
 fn main() {
     println!("Hello, world!");
 }
-
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
+
+    use rust_web_handson_presentation::model::todo_create_response::TodoCreateResponseJson;
+
     #[tokio::test]
-    async fn sampleEtoETestAsync() -> Result<(), Box<dyn std::error::Error>> {
+    async fn _201_todoを正常に作成することができる() -> Result<(), Box<dyn std::error::Error>> {
 
         // TODO json を作って頑張ってアサーションする? それとも text → json のパースを頑張るか
         let client = reqwest::Client::new();
-        let res = client.post("http://127.0.0.1:8080/todo")
+        let res = client.post("http://127.0.0.1:8080/todo/try")
             .body("{ \"title\": \"hogehgoe\", \"description\": \"fugafuga\" }")
             .header("Content-Type", "application/json")
             .send()
             .await?;
-            // TODO i64 → String の キャストは勝手にやってくれなさそう...
+            // 以下、i64 → String の キャストは勝手にやってくれなさそう
             // .json::<HashMap<String, String>>()
-            // .await?;
 
-        assert_eq!(res.status(), 201);
+        let response_json = res.json::<TodoCreateResponseJson>().await?;
+        assert_eq!(response_json.title, "hogehoge");
+        assert_eq!(response_json.description, "fugafuga");
+        // res.status();
+        // assert_eq!(res.status().clone(), 201);
 
         // let resp = reqwest::get("https://httpbin.org/ip")
         // .await?
         // .json::<HashMap<String, String>>()
         // .await?;
 
-        println!("{:#?}", res);
+        // println!("{:#?}", res);
         Ok(())
     }
 
+    /**
+     * Blocking のテスト実行↓
+     */
     #[test]
-    fn sampleEtoETestBlocking() -> Result<(), Box<dyn std::error::Error>> {
+    fn sample_e2e_test_blocking() -> Result<(), Box<dyn std::error::Error>> {
         let resp = reqwest::blocking::get("https://httpbin.org/get")?
         // .json::<String>()?;
         .text()?;
         println!("{:#?}", resp);
-        // assert_eq!(resp, "{\n  \"args\": {}, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Host\": \"httpbin.org\", \n    \"X-Amzn-Trace-Id\": \"Root=1-628edd96-3ab7f59e2f687d615101b21b\"\n  }, \n  \"origin\": \"111.87.41.99\", \n  \"url\": \"https://httpbin.org/get\"\n}\n");
         Ok(())
     }
 

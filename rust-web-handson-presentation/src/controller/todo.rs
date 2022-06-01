@@ -88,7 +88,7 @@ pub async fn create_try(
     Extension(modules): Extension<Arc<UseCaseModules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
     if true {
-        let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
+        let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "hogehoge".to_string(), "fugafuga".to_string(), "2022-01-01 01:00:00".to_string());
         let body: Json<TodoCreateResponseJson> = Json(mock_response);
         
         let mut headers = HeaderMap::new();

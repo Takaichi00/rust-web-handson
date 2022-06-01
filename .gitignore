@@ -19,3 +19,5 @@ local-middleware/data/*
 .vscode
 
 .idea
+
+http-client.private.env.json

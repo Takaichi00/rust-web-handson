@@ -19,4 +19,7 @@ pub struct RdsRepositoryImpl<T> {
     _marker: PhantomData<T>,
 }
 
+// TODO kawachi さんのリポジトリ参照
+// ここで new できるようにしている
+
 pub mod todo;

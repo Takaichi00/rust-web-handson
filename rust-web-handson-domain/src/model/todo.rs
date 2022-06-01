@@ -5,7 +5,7 @@ use derive_new::new;
 // Debug → println をするために継承している
 // new → derive_new というクラスになる
 // Lombok みたいなもの
-#[derive(new, Debug)]
+#[derive(new, Debug, PartialEq, Clone)] // test のアサーションのために PartialEq, Clone を実装する
 pub struct Todo {
     pub id: i64,
     pub title: String,

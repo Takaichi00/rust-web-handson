@@ -4,12 +4,8 @@ use axum::{http::{StatusCode, HeaderMap}, response::IntoResponse, routing::{get,
 
 use mockall_double::*;
 
-#[cfg(test)]
-use mockall::*;
-
-// #[double]
+#[double]
 use rust_web_handson_app::modules::UseCaseModules;
-use rust_web_handson_app::modules::UseCaseModulesExt;
 use rust_web_handson_domain::model::todo::NewTodo;
 
 use crate::model::{todo::TodoJson, todo_create_response::TodoCreateResponseJson, todo_create_request::TodoCreateRequestJson};
@@ -85,7 +81,7 @@ pub async fn create(
  */
 pub async fn create_try(
     Json(request_json): Json<TodoCreateRequestJson>,
-    Extension(modules): Extension<Arc<UseCaseModules>>,
+    // Extension(modules): Extension<Arc<UseCaseModules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
     if true {
         let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "hogehoge".to_string(), "fugafuga".to_string(), "2022-01-01 01:00:00".to_string());
@@ -119,8 +115,14 @@ mod tests {
     // #[double]
     // use rust_web_handson_app::modules::MockUseCaseModules;
 
+
     #[tokio::test]
     async fn createが正常に成功した場合はStatusCode_CREATEDが取得できる() {
+
+    }
+
+    #[tokio::test]
+    async fn createが正常に成功した場合はStatusCode_CREATEDが取得できる_old() {
 
         // setup 
         // TODO UseCaseModules を Mock にする

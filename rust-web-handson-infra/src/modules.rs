@@ -1,4 +1,5 @@
-use rust_web_handson_domain::{model::todo::Todo, repository::todo::TodoRepository};
+use mockall::automock;
+use rust_web_handson_domain::{model::todo::Todo, repository::todo::{TodoRepository, MockTodoRepository}};
 
 use crate::{client::mysql::Rds, repository::RdsRepositoryImpl};
 
@@ -15,6 +16,7 @@ impl RepositoriesModule {
     }
 }
 
+#[automock(type TodoRepo=MockTodoRepository;)]
 pub trait RepositoriesModuleExt {
     type TodoRepo: TodoRepository;
     fn todo_repository(&self) -> &Self::TodoRepo;

@@ -9,3 +9,4 @@ edition = "2021"
 reqwest = { version = "0.11", features = ["json", "blocking"] }
 tokio = {version = "1.18.2", features = ["full"]}
 rust-web-handson-presentation = {path = "../rust-web-handson-presentation"}
+anyhow = "1.0.57"

@@ -90,21 +90,31 @@ mod tests {
     
     use std::fmt::Debug;
 
-    use axum::body::HttpBody;
-    use rust_web_handson_app::modules::UseCaseModules;
+    use axum::{body::HttpBody, Json};
+    use rust_web_handson_app::modules::{UseCaseModules, MockUseCaseModules};
 
-    use crate::model::todo_create_response::TodoCreateResponseJson;
-    
-    use std::collections::HashMap;
+    use crate::model::{todo_create_response::TodoCreateResponseJson, todo_create_request::TodoCreateRequestJson};
 
-    use mockall_double::*;
-
-    // #[double]
-    // use rust_web_handson_app::modules::MockUseCaseModules;
-
+    use super::*;
 
     #[tokio::test]
     async fn createが正常に成功した場合はStatusCode_CREATEDが取得できる() {
+        // setup
+        // let mock_usecase_module = MockUseCaseModules::new();
+
+        // execute
+        let actual = create_try(Json(TodoCreateRequestJson::new("test-title".to_string(), "test-description".to_string()))).await.unwrap();
+
+
+        let mut headers = HeaderMap::new();
+        headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
+        // let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(1, "title".to_string(), "description".to_string(), "2022-01-01 01:00:00".to_string());
+        // let body: Json<TodoCreateResponseJson> = Json(mock_response);
+
+        // assert
+        let expected_status = StatusCode::CREATED;
+        let actual_status_code = actual.into_response().status().clone();
+        assert_eq!(actual_status_code, expected_status);
 
     }
 

@@ -11,8 +11,6 @@ use mockall::automock;
 
 pub struct UseCaseModules {
     todo_usecase: TodoUseCase<RepositoriesModule>,
-    todo_create_usecase: TodoUseCase<RepositoriesModule>,
-    // todo_create_try_usecase: TodoUseCase<>
 }
 
 #[automock]
@@ -23,25 +21,14 @@ impl UseCaseModules {
 
         // make usecase instances
         let todo_usecase = TodoUseCase::new(repositories.clone());
-        let todo_create_usecase = TodoUseCase::new(repositories.clone());
-
-
-        // TODO とりあえず空実装したいが、どうしたらいいのかわからない
-        // let todo_create_try_usecase = TodoUseCase::new();
 
         // make di container
         Self {
-            todo_usecase,
-            todo_create_usecase,
-            // todo_create_try_usecase,
+            todo_usecase
         }
     }
 
     pub fn todo_usecase(&self) -> &TodoUseCase<RepositoriesModule> {
         &self.todo_usecase
-    }
-
-    pub fn todo_create_usecase(&self) -> &TodoUseCase<RepositoriesModule> {
-        &self.todo_create_usecase
     }
 }

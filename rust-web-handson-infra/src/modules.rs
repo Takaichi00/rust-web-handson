@@ -1,5 +1,5 @@
 use mockall::automock;
-use rust_web_handson_domain::{model::todo::Todo, repository::todo::{TodoRepository, MockTodoRepository}};
+use rust_web_handson_domain::{model::todo::Todo, repository::{todo::{TodoRepository, MockTodoRepository}, RepositoriesModuleExt}};
 
 use crate::{client::mysql::Rds, repository::RdsRepositoryImpl};
 
@@ -8,18 +8,13 @@ pub struct RepositoriesModule {
 }
 
 impl RepositoriesModule {
-    pub fn new(rds: Rds) -> Self {
-        let todo_repository = RdsRepositoryImpl::new(rds.clone());
+    pub async fn new() -> Self {
+        let rds = Rds::new().await;
+        let todo_repository = RdsRepositoryImpl::new(rds);
         Self {
             todo_repository: todo_repository,
         }
     }
-}
-
-#[automock(type TodoRepo=MockTodoRepository;)]
-pub trait RepositoriesModuleExt {
-    type TodoRepo: TodoRepository;
-    fn todo_repository(&self) -> &Self::TodoRepo;
 }
 
 impl RepositoriesModuleExt for RepositoriesModule {

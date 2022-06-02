@@ -10,10 +10,10 @@ pub async fn startup(router: Router) {
 
     tracing::info!("Server listening on {}", addr);
 
-    let rds = Rds::new().await;
-
     // UseCaseModules に rds のインスタンスを渡してあげないと行けない
-    let modules = Arc::new(UseCaseModules::new(rds).await);
+    // TODO ここで rds の実装を渡すのはいいのだが、UseCaseModules::new で受ける方を trait or struct にすることはできないか? application 層の UseCaseModules が Infra 層に依存してしまっている。できるなら Domain 層の TodoRepository の型で受けたい
+    // TODO それかここで UseCaseModules::new(rds) の処理を実施することで、UseCaseModules は Infra のことを知らなくてすむ
+    let modules = Arc::new(UseCaseModules::new().await);
 
     // 共通の値をシングルトンで渡してくださいという処理
     // 例えば、AuthenticationLayer 、Controlelr にわたす前の Filter のような処理

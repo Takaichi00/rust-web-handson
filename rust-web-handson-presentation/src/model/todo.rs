@@ -1,7 +1,7 @@
 use rust_web_handson_domain::model::todo::Todo;
 use serde::Serialize;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, PartialEq)]
 pub struct TodoJson {
     id: i64,
     title: String,

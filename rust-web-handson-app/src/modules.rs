@@ -1,11 +1,12 @@
-use std::{sync::Arc};
+use std::sync::Arc;
 
-use rust_web_handson_domain::{repository::RepositoriesModuleExt, model::todo::Todo};
-use rust_web_handson_infra::{
-    modules::{RepositoriesModule},
+use rust_web_handson_domain::{model::todo::Todo, repository::RepositoriesModuleExt};
+use rust_web_handson_infra::modules::RepositoriesModule;
+
+use crate::usecase::{
+    todo::{MockTodoUseCase, TodoUseCase},
+    UseCaseImpl,
 };
-
-use crate::usecase::{todo::{TodoUseCase}, UseCaseImpl};
 
 use mockall::automock;
 
@@ -13,6 +14,7 @@ pub struct UseCaseModules {
     todo_usecase: UseCaseImpl<Todo, RepositoriesModule>,
 }
 
+#[automock(type TodoUc=MockTodoUseCase;)]
 pub trait UseCaseModulesExt {
     type TodoUc: TodoUseCase;
     fn todo_usecase(&self) -> &Self::TodoUc;
@@ -27,13 +29,10 @@ impl UseCaseModules {
         let todo_usecase = UseCaseImpl::new(repositories.clone());
 
         // make di container
-        Self {
-            todo_usecase
-        }
+        Self { todo_usecase }
     }
 }
 
-#[automock(type TodoUc=MockTodoUseCase;)]
 impl UseCaseModulesExt for UseCaseModules {
     type TodoUc = UseCaseImpl<Todo, RepositoriesModule>;
     fn todo_usecase(&self) -> &Self::TodoUc {

@@ -11,7 +11,6 @@ use super::RdsRepositoryImpl;
 
 #[async_trait]
 impl TodoRepository for RdsRepositoryImpl<Todo> {
-    
     async fn get_all(&self) -> anyhow::Result<Vec<Todo>> {
         let pool = self.pool.0.clone();
         let todo_list = query_as::<_, TodoTable>("select * from todo")
@@ -28,5 +27,21 @@ impl TodoRepository for RdsRepositoryImpl<Todo> {
             .execute(&*pool)
             .await?;
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use rust_web_handson_domain::{model::todo::Todo, repository::todo::TodoRepository};
+
+    use crate::{client::mysql::Rds, repository::RdsRepositoryImpl};
+
+    #[tokio::test]
+    async fn test_get_all() -> () {
+        // Mock に差し替えるとしたらここ?
+        let rds = Rds::new().await;
+        let todo_repository: RdsRepositoryImpl<Todo> = RdsRepositoryImpl::new(rds);
+        let result_list = todo_repository.get_all().await.unwrap();
+        println!("{:?}", result_list.get(0).unwrap());
     }
 }

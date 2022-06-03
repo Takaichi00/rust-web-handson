@@ -3,7 +3,6 @@ use std::{net::SocketAddr, sync::Arc};
 use axum::{Extension, Router};
 use dotenv::dotenv;
 use rust_web_handson_app::modules::UseCaseModules;
-use rust_web_handson_infra::client::mysql::Rds;
 
 pub async fn startup(router: Router) {
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080));

@@ -1,5 +1,4 @@
-use mockall::automock;
-use rust_web_handson_domain::{model::todo::Todo, repository::{todo::{TodoRepository, MockTodoRepository}, RepositoriesModuleExt}};
+use rust_web_handson_domain::{model::todo::Todo, repository::RepositoriesModuleExt};
 
 use crate::{client::mysql::Rds, repository::RdsRepositoryImpl};
 

@@ -5,7 +5,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
 
-    use reqwest::{Response, Client};
+    use reqwest::Response;
     use rust_web_handson_presentation::model::todo_create_response::TodoCreateResponseJson;
     use std::sync::Once;
 
@@ -24,17 +24,21 @@ mod tests {
         initialize();
         println!("initialize end 1");
         let client = reqwest::Client::new();
-        let res: Response = client.post("http://127.0.0.1:8080/todo/try")
+        let res: Response = client
+            .post("http://127.0.0.1:8080/todo/try")
             .body("{ \"title\": \"hogehgoe\", \"description\": \"fugafuga\" }")
             .header("Content-Type", "application/json")
             .send()
             .await?;
-            // 以下、i64 → String の キャストは勝手にやってくれなさそう
-            // .json::<HashMap<String, String>>()
+        // 以下、i64 → String の キャストは勝手にやってくれなさそう
+        // .json::<HashMap<String, String>>()
 
         assert_eq!(res.status().as_u16(), 201);
         assert_eq!(res.headers().contains_key("Location"), true);
-        assert_eq!(res.headers().get("Location").unwrap(), &"http://localhost:8080/todo/1");
+        assert_eq!(
+            res.headers().get("Location").unwrap(),
+            &"http://localhost:8080/todo/1"
+        );
 
         // テストケースごとにテストデータを用意できれば id なども検証できる (やる必要があるかは考えどころ)
         let response_json = res.json::<TodoCreateResponseJson>().await?;
@@ -48,17 +52,21 @@ mod tests {
         initialize();
         println!("initialize end 2");
         let client = reqwest::Client::new();
-        let res: Response = client.post("http://127.0.0.1:8080/todo/try")
+        let res: Response = client
+            .post("http://127.0.0.1:8080/todo/try")
             .body("{ \"title\": \"hogehgoe\", \"description\": \"fugafuga\" }")
             .header("Content-Type", "application/json")
             .send()
             .await?;
-            // 以下、i64 → String の キャストは勝手にやってくれなさそう
-            // .json::<HashMap<String, String>>()
+        // 以下、i64 → String の キャストは勝手にやってくれなさそう
+        // .json::<HashMap<String, String>>()
 
         assert_eq!(res.status().as_u16(), 201);
         assert_eq!(res.headers().contains_key("Location"), true);
-        assert_eq!(res.headers().get("Location").unwrap(), &"http://localhost:8080/todo/1");
+        assert_eq!(
+            res.headers().get("Location").unwrap(),
+            &"http://localhost:8080/todo/1"
+        );
 
         // テストケースごとにテストデータを用意できれば id なども検証できる (やる必要があるかは考えどころ)
         let response_json = res.json::<TodoCreateResponseJson>().await?;
@@ -75,10 +83,9 @@ mod tests {
         initialize();
         println!("initialize end 3");
         let resp = reqwest::blocking::get("https://httpbin.org/get")?
-        // .json::<String>()?;
-        .text()?;
+            // .json::<String>()?;
+            .text()?;
         println!("{:#?}", resp);
         Ok(())
     }
-
 }

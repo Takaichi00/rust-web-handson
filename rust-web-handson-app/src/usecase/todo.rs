@@ -1,8 +1,9 @@
-use std::sync::Arc;
-
 use async_trait::async_trait;
 use mockall::automock;
-use rust_web_handson_domain::{model::todo::{Todo, NewTodo}, repository::{todo::TodoRepository, RepositoriesModuleExt}};
+use rust_web_handson_domain::{
+    model::todo::{NewTodo, Todo},
+    repository::{todo::TodoRepository, RepositoriesModuleExt},
+};
 
 use super::UseCaseImpl;
 
@@ -30,11 +31,13 @@ mod test {
 
     use super::*;
     use chrono::Local;
-    use rust_web_handson_domain::repository::{todo::MockTodoRepository, MockRepositoriesModuleExt};
+    use rust_web_handson_domain::repository::{
+        todo::MockTodoRepository, MockRepositoriesModuleExt,
+    };
+    use std::sync::Arc;
 
     #[tokio::test]
     async fn test_get_list() -> () {
-        
         // setup
         let mut mock_repositories = MockRepositoriesModuleExt::new();
         let mut mock_todo_repo = MockTodoRepository::new();
@@ -74,7 +77,7 @@ mod test {
             now.clone(),
             Some(now.clone()),
         )];
-        
+
         // assert
         assert_eq!(result.unwrap(), expect);
     }

@@ -7,9 +7,6 @@ use axum::{
     Extension, Json, Router,
 };
 
-use mockall_double::*;
-
-// #[double]
 use rust_web_handson_app::modules::UseCaseModules;
 
 use rust_web_handson_app::{modules::UseCaseModulesExt, usecase::todo::TodoUseCase};
@@ -97,13 +94,11 @@ pub async fn create_try(
         return Ok((StatusCode::CREATED, headers, body));
     }
 
-    return Err((StatusCode::INTERNAL_SERVER_ERROR));
+    return Err(StatusCode::INTERNAL_SERVER_ERROR);
 }
 
 #[cfg(test)]
 mod tests {
-
-    use std::fmt::Debug;
 
     use chrono::Local;
     use rust_web_handson_app::{modules::MockUseCaseModulesExt, usecase::todo::MockTodoUseCase};
@@ -148,11 +143,14 @@ mod tests {
         let expected_status = StatusCode::OK;
         let actual_status_code = actual.into_response().status().clone();
 
-        fn expect_response(select: Vec<Todo>) -> impl IntoResponse {
-            let expected_json: Json<Vec<TodoJson>> =
-                Json(select.into_iter().map(|t| TodoJson::from(t)).collect());
-            (StatusCode::OK, expected_json)
-        }
+        // TODO Response Body をアサーションする
+        // fn expect_response(select: Vec<Todo>) -> impl IntoResponse {
+        //     let expected_json: Json<Vec<TodoJson>> =
+        //         Json(select.into_iter().map(|t| TodoJson::from(t)).collect());
+        //     (StatusCode::OK, expected_json)
+        // }
+
+        assert_eq!(expected_status, actual_status_code);
 
         // assert_eq!(
         //     actual.into_response(),

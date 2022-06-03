@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use rust_web_handson_domain::{model::todo::Todo, repository::RepositoriesModuleExt};
+use rust_web_handson_domain::model::todo::Todo;
 use rust_web_handson_infra::modules::RepositoriesModule;
 
 use crate::usecase::{

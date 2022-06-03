@@ -30,6 +30,7 @@ impl TodoRepository for RdsRepositoryImpl<Todo> {
     }
 }
 
+#[ignore]
 #[cfg(test)]
 mod test {
     use rust_web_handson_domain::{model::todo::Todo, repository::todo::TodoRepository};

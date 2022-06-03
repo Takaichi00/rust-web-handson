@@ -110,45 +110,61 @@ mod tests {
 
     #[tokio::test]
     #[ignore]
-    async fn get_allをtowerでテストしてみる() {
-        let mut mock_usecase_module = MockUseCaseModulesExt::new();
-        let mut mock_todo_usecase = MockTodoUseCase::new();
+    async fn create_tryをtowerでテストしてみる() {
+        // let mut mock_usecase_module = MockUseCaseModulesExt::new();
+        // let mut mock_todo_usecase = MockTodoUseCase::new();
 
-        let now = Local::now();
+        // let now = Local::now();
 
-        let select = vec![Todo::new(
-            1,
-            "hoge".to_string(),
-            "fuga".to_string(),
-            now.clone(),
-            now.clone(),
-            Some(now.clone()),
-        )];
+        // let select = vec![Todo::new(
+        //     1,
+        //     "hoge".to_string(),
+        //     "fuga".to_string(),
+        //     now.clone(),
+        //     now.clone(),
+        //     Some(now.clone()),
+        // )];
 
-        let expect_result: anyhow::Result<Vec<Todo>> = anyhow::Ok(select.to_vec());
+        // let expect_result: anyhow::Result<Vec<Todo>> = anyhow::Ok(select.to_vec());
 
-        mock_todo_usecase
-            .expect_get_list()
-            .return_once(|| expect_result);
+        // mock_todo_usecase
+        //     .expect_get_list()
+        //     .return_once(|| expect_result);
 
-        mock_usecase_module
-            .expect_todo_usecase()
-            .once()
-            .return_const(mock_todo_usecase);
+        // mock_usecase_module
+        //     .expect_todo_usecase()
+        //     // .once()
+        //     .return_const(mock_todo_usecase);
 
-        let app = router().layer(Extension(Arc::new(mock_usecase_module)));
+        let router = router();
+
+        let modules = Arc::new(UseCaseModules::new().await);
+        let app = router.layer(Extension(modules));
+
+        // let app = router().layer(Extension(Arc::new(mock_usecase_module)));
 
         // `Router` implements `tower::Service<Request<Body>>` so we can
         // call it like any tower service, no need to run an HTTP server.
         let response = app
-            .oneshot(Request::builder().uri("/").body(Body::empty()).unwrap())
+            // .oneshot(Request::builder().uri("/").body(Body::empty()).unwrap())
+            .oneshot(
+                Request::builder()
+                    .method(http::Method::POST)
+                    .header("Content-Type", "application/json")
+                    .uri("/")
+                    .body(Body::from(
+                        "{ \"title\": \"sample title\", \"description\": \"sample description\" }"
+                            .to_string(),
+                    ))
+                    .unwrap(),
+            )
             .await
             .unwrap();
 
-        assert_eq!(response.status(), StatusCode::OK);
+        assert_eq!(response.status(), StatusCode::CREATED);
 
-        let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
-        assert_eq!(&body[..], b"Hello, World!");
+        // let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
+        // assert_eq!(&body[..], b"Hello, World!");
     }
 
     #[tokio::test]

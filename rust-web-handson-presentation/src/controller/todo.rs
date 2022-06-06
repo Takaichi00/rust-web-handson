@@ -76,8 +76,12 @@ pub async fn create(
  */
 pub async fn create_try(
     Json(request_json): Json<TodoCreateRequestJson>,
-    // Extension(modules): Extension<Arc<UseCaseModules>>,
+    Extension(modules): Extension<Arc<UseCaseModules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
+    // panic!();
+    println!("test start!!!");
+    tracing::error!("create_try method !!!!");
+
     if true {
         let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(
             1,
@@ -91,7 +95,7 @@ pub async fn create_try(
         headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
 
         // TODO 下記は IntoResponse 型? どのように初期化しているか?
-        return Ok((StatusCode::CREATED, headers, body));
+        return Ok((StatusCode::OK, headers, body));
     }
 
     return Err(StatusCode::INTERNAL_SERVER_ERROR);
@@ -111,37 +115,44 @@ mod tests {
     #[tokio::test]
     #[ignore]
     async fn create_tryをtowerでテストしてみる() {
-        // let mut mock_usecase_module = MockUseCaseModulesExt::new();
-        // let mut mock_todo_usecase = MockTodoUseCase::new();
+        println!("test start!!!");
+        let mut mock_usecase_module = MockUseCaseModulesExt::new();
+        let mut mock_todo_usecase = MockTodoUseCase::new();
 
-        // let now = Local::now();
+        let now = Local::now();
 
-        // let select = vec![Todo::new(
-        //     1,
-        //     "hoge".to_string(),
-        //     "fuga".to_string(),
-        //     now.clone(),
-        //     now.clone(),
-        //     Some(now.clone()),
-        // )];
+        let select = vec![Todo::new(
+            1,
+            "hoge".to_string(),
+            "fuga".to_string(),
+            now.clone(),
+            now.clone(),
+            Some(now.clone()),
+        )];
 
-        // let expect_result: anyhow::Result<Vec<Todo>> = anyhow::Ok(select.to_vec());
+        let expect_result: anyhow::Result<Vec<Todo>> = anyhow::Ok(select.to_vec());
 
-        // mock_todo_usecase
-        //     .expect_get_list()
-        //     .return_once(|| expect_result);
+        mock_todo_usecase
+            .expect_get_list()
+            .return_once(|| expect_result);
 
-        // mock_usecase_module
-        //     .expect_todo_usecase()
-        //     // .once()
-        //     .return_const(mock_todo_usecase);
+        mock_usecase_module
+            .expect_todo_usecase()
+            // .once()
+            .return_const(mock_todo_usecase);
+
+        // 500エラーになるだけでエラーが出ないのでどうすればいいかわからない...
+        // どうやら create_try を実行する前に落ちているよう。
+        // ↑ create_try の最初に panic!(); を記載しても panic で落ちない
+        let modules = Arc::new(mock_usecase_module);
+
+        // ↓ DB の環境変数を設定すれば起動することができるが、本物の DB を見に行ってしまう
+        // let modules = Arc::new(UseCaseModules::new().await);
 
         let router = router();
-
-        let modules = Arc::new(UseCaseModules::new().await);
         let app = router.layer(Extension(modules));
 
-        // let app = router().layer(Extension(Arc::new(mock_usecase_module)));
+        println!("before request!!!");
 
         // `Router` implements `tower::Service<Request<Body>>` so we can
         // call it like any tower service, no need to run an HTTP server.
@@ -151,7 +162,7 @@ mod tests {
                 Request::builder()
                     .method(http::Method::POST)
                     .header("Content-Type", "application/json")
-                    .uri("/")
+                    .uri("/try")
                     .body(Body::from(
                         "{ \"title\": \"sample title\", \"description\": \"sample description\" }"
                             .to_string(),
@@ -161,13 +172,16 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(response.status(), StatusCode::CREATED);
+        println!("after request!!!");
+
+        assert_eq!(response.status(), StatusCode::OK);
 
         // let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
         // assert_eq!(&body[..], b"Hello, World!");
     }
 
     #[tokio::test]
+    #[ignore]
     async fn get_allが正常に成功した場合はStatusCode_OKが取得できる() {
         // setup
         let mut mock_usecase_module = MockUseCaseModulesExt::new();

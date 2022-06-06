@@ -21,8 +21,8 @@ use crate::model::{
 pub fn router() -> Router {
     return Router::new()
         .route("/", get(get_all::<UseCaseModules>))
-        .route("/", post(create))
-        .route("/try", post(create_try));
+        .route("/", post(create::<UseCaseModules>))
+        .route("/try", post(create_try::<UseCaseModules>));
 }
 
 /**
@@ -48,9 +48,9 @@ pub async fn get_all<U: UseCaseModulesExt>(
 /**
  * Todo を作成する (Hands On ver)
  */
-pub async fn create(
+pub async fn create<U: UseCaseModulesExt>(
     Json(request_json): Json<TodoCreateRequestJson>,
-    Extension(modules): Extension<Arc<UseCaseModules>>,
+    Extension(modules): Extension<Arc<U>>,
 ) -> Result<impl IntoResponse, StatusCode> {
     let result = modules
         .todo_usecase()
@@ -74,9 +74,9 @@ pub async fn create(
 /**
  * Todo を作成する (Try バージョン)
  */
-pub async fn create_try(
+pub async fn create_try<U: UseCaseModulesExt>(
     Json(request_json): Json<TodoCreateRequestJson>,
-    Extension(modules): Extension<Arc<UseCaseModules>>,
+    Extension(modules): Extension<Arc<U>>,
 ) -> Result<impl IntoResponse, StatusCode> {
     // panic!();
     println!("test start!!!");
@@ -113,7 +113,7 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    #[ignore]
+    // #[ignore]
     async fn create_tryをtowerでテストしてみる() {
         println!("test start!!!");
         let mut mock_usecase_module = MockUseCaseModulesExt::new();
@@ -149,7 +149,10 @@ mod tests {
         // ↓ DB の環境変数を設定すれば起動することができるが、本物の DB を見に行ってしまう
         // let modules = Arc::new(UseCaseModules::new().await);
 
-        let router = router();
+        let router = Router::new()
+            .route("/", get(get_all::<MockUseCaseModulesExt>))
+            .route("/", post(create::<MockUseCaseModulesExt>))
+            .route("/try", post(create_try::<MockUseCaseModulesExt>));
         let app = router.layer(Extension(modules));
 
         println!("before request!!!");
@@ -176,7 +179,9 @@ mod tests {
 
         assert_eq!(response.status(), StatusCode::OK);
 
-        // let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
+        let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
+        println!("body: {:#?}", body);
+
         // assert_eq!(&body[..], b"Hello, World!");
     }
 

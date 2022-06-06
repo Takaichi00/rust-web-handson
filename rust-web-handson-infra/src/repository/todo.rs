@@ -40,6 +40,7 @@ mod test {
     #[tokio::test]
     async fn test_get_all() -> () {
         // Mock に差し替えるとしたらここ?
+        // 接続のテストは実施すること
         let rds = Rds::new().await;
         let todo_repository: RdsRepositoryImpl<Todo> = RdsRepositoryImpl::new(rds);
         let result_list = todo_repository.get_all().await.unwrap();

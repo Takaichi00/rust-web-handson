@@ -78,10 +78,7 @@ pub async fn create_try<U: UseCaseModulesExt>(
     Json(request_json): Json<TodoCreateRequestJson>,
     Extension(modules): Extension<Arc<U>>,
 ) -> Result<impl IntoResponse, StatusCode> {
-    // panic!();
-    println!("test start!!!");
-    tracing::error!("create_try method !!!!");
-
+    // TODO 実装
     if true {
         let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(
             1,
@@ -94,8 +91,7 @@ pub async fn create_try<U: UseCaseModulesExt>(
         let mut headers = HeaderMap::new();
         headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
 
-        // TODO 下記は IntoResponse 型? どのように初期化しているか?
-        return Ok((StatusCode::OK, headers, body));
+        return Ok((StatusCode::CREATED, headers, body));
     }
 
     return Err(StatusCode::INTERNAL_SERVER_ERROR);
@@ -105,29 +101,36 @@ pub async fn create_try<U: UseCaseModulesExt>(
 mod tests {
 
     use axum::{body::Body, http::Request};
-    use chrono::Local;
+    use chrono::{Local, TimeZone};
     use rust_web_handson_app::{modules::MockUseCaseModulesExt, usecase::todo::MockTodoUseCase};
     use rust_web_handson_domain::model::todo::Todo;
     use tower::ServiceExt;
 
     use super::*;
 
+    pub fn test_router() -> Router {
+        return Router::new()
+            .route("/", get(get_all::<MockUseCaseModulesExt>))
+            .route("/", post(create::<MockUseCaseModulesExt>))
+            .route("/try", post(create_try::<MockUseCaseModulesExt>));
+    }
+
     #[tokio::test]
-    // #[ignore]
     async fn create_tryをtowerでテストしてみる() {
-        println!("test start!!!");
         let mut mock_usecase_module = MockUseCaseModulesExt::new();
         let mut mock_todo_usecase = MockTodoUseCase::new();
 
-        let now = Local::now();
+        let mock_now = Local
+            .datetime_from_str("2022/01/01 13:00:00", "%Y/%m/%d %H:%M:%S")
+            .unwrap();
 
         let select = vec![Todo::new(
             1,
             "hoge".to_string(),
             "fuga".to_string(),
-            now.clone(),
-            now.clone(),
-            Some(now.clone()),
+            mock_now.clone(),
+            mock_now.clone(),
+            Some(mock_now.clone()),
         )];
 
         let expect_result: anyhow::Result<Vec<Todo>> = anyhow::Ok(select.to_vec());
@@ -141,26 +144,12 @@ mod tests {
             // .once()
             .return_const(mock_todo_usecase);
 
-        // 500エラーになるだけでエラーが出ないのでどうすればいいかわからない...
-        // どうやら create_try を実行する前に落ちているよう。
-        // ↑ create_try の最初に panic!(); を記載しても panic で落ちない
         let modules = Arc::new(mock_usecase_module);
 
-        // ↓ DB の環境変数を設定すれば起動することができるが、本物の DB を見に行ってしまう
-        // let modules = Arc::new(UseCaseModules::new().await);
-
-        let router = Router::new()
-            .route("/", get(get_all::<MockUseCaseModulesExt>))
-            .route("/", post(create::<MockUseCaseModulesExt>))
-            .route("/try", post(create_try::<MockUseCaseModulesExt>));
+        let router = test_router();
         let app = router.layer(Extension(modules));
 
-        println!("before request!!!");
-
-        // `Router` implements `tower::Service<Request<Body>>` so we can
-        // call it like any tower service, no need to run an HTTP server.
         let response = app
-            // .oneshot(Request::builder().uri("/").body(Body::empty()).unwrap())
             .oneshot(
                 Request::builder()
                     .method(http::Method::POST)
@@ -175,32 +164,31 @@ mod tests {
             .await
             .unwrap();
 
-        println!("after request!!!");
-
-        assert_eq!(response.status(), StatusCode::OK);
+        assert_eq!(response.status(), StatusCode::CREATED);
 
         let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
         println!("body: {:#?}", body);
 
-        // assert_eq!(&body[..], b"Hello, World!");
+        assert_eq!(&body[..], b"{\"id\":1,\"title\":\"hogehoge\",\"description\":\"fugafuga\",\"created_at\":\"2022-01-01 01:00:00\"}");
     }
 
     #[tokio::test]
-    #[ignore]
     async fn get_allが正常に成功した場合はStatusCode_OKが取得できる() {
         // setup
         let mut mock_usecase_module = MockUseCaseModulesExt::new();
         let mut mock_todo_usecase = MockTodoUseCase::new();
 
-        let now = Local::now();
+        let mock_now = Local
+            .datetime_from_str("2022/01/01 13:00:00", "%Y/%m/%d %H:%M:%S")
+            .unwrap();
 
         let select = vec![Todo::new(
             1,
             "hoge".to_string(),
             "fuga".to_string(),
-            now.clone(),
-            now.clone(),
-            Some(now.clone()),
+            mock_now.clone(),
+            mock_now.clone(),
+            Some(mock_now.clone()),
         )];
 
         let expect_result: anyhow::Result<Vec<Todo>> = anyhow::Ok(select.to_vec());
@@ -214,31 +202,21 @@ mod tests {
             .once()
             .return_const(mock_todo_usecase);
 
+        let modules = Arc::new(mock_usecase_module);
+        let router = test_router();
+        let app = router.layer(Extension(modules));
+
         // execute
-        let actual = get_all(Extension(Arc::new(mock_usecase_module)))
+        let response = app
+            .oneshot(Request::builder().uri("/").body(Body::empty()).unwrap())
             .await
             .unwrap();
 
         // assert
-        let expected_status = StatusCode::OK;
-        let actual_status_code = actual.into_response().status().clone();
+        assert_eq!(response.status(), StatusCode::OK);
 
-        // TODO Response Body をアサーションする
-        // fn expect_response(select: Vec<Todo>) -> impl IntoResponse {
-        //     let expected_json: Json<Vec<TodoJson>> =
-        //         Json(select.into_iter().map(|t| TodoJson::from(t)).collect());
-        //     (StatusCode::OK, expected_json)
-        // }
-
-        assert_eq!(expected_status, actual_status_code);
-
-        // assert_eq!(
-        //     actual.into_response(),
-        //     expect_response(select).into_response()
-        // );
-
-        // let actual_json = actual.into_response().body();
-        // assert_eq!(actual_status_code, expected_status);
-        // assert_eq!(actual_json, expected_json);
+        let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
+        println!("body: {:#?}", body);
+        assert_eq!(&body[..], b"[{\"id\":1,\"title\":\"hoge\",\"description\":\"fuga\",\"created_at\":\"2022-01-01 13:00:00 +09:00\"}]");
     }
 }

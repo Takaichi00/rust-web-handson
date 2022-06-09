@@ -82,3 +82,28 @@ cargo run --bin todo
 #### rust-web-handson-infra
 * テストの際は、実際にローカルで起動している DB に対して接続を実施し、SQL が実行できているかどうかを検証するテストを記載しています
   * 単体テスト時に、専用のインメモリ DB を建てることも検討しましたが、現在良さげなツールがなかったので↑の方針としています
+
+# HTTP Client
+* http ディレクトリでは、.http ファイルが格納されており、VS Code の [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) プラグインを利用することで簡単に HTTP リクエストを実施することができます。
+* .http では環境変数によって値を変えることができます。(local の場合は url: localhost, port:8080, dev の場合は url: hgoehoge.com, port: 80 など)
+  * 環境変数の設定: "F1" → "setting json" で "Open Settings(JSON)" を選択し、`settings.json` に以下を追加
+```json
+    "rest-client.environmentVariables": {
+        "local": {
+            "baseUrl": "http://localhost:8080"
+        }
+    },
+```
+ファイル全体例: 
+```json
+{
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromCodeNavigation": true,
+    "rest-client.environmentVariables": {
+        "local": {
+            "baseUrl": "http://localhost:8080"
+        }
+    },
+    "editor.formatOnSave": true
+}
+```

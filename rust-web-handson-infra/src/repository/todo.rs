@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use chrono::{Local, TimeZone};
 use rust_web_handson_domain::{
     model::todo::{NewTodo, Todo},
     repository::todo::TodoRepository,
@@ -27,6 +28,21 @@ impl TodoRepository for RdsRepositoryImpl<Todo> {
             .execute(&*pool)
             .await?;
         Ok(())
+    }
+
+    async fn create_and_get_info(&self, source: NewTodo) -> anyhow::Result<Todo> {
+        let mock_now = Local
+            .datetime_from_str("2022/01/01 13:00:00", "%Y/%m/%d %H:%M:%S")
+            .unwrap();
+        let mock_expect = Todo::new(
+            1,
+            "sample title".to_string(),
+            "sample description".to_string(),
+            mock_now.clone(),
+            mock_now.clone(),
+            Some(mock_now.clone()),
+        );
+        anyhow::Ok(mock_expect)
     }
 }
 

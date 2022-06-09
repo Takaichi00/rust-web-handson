@@ -6,4 +6,5 @@ use mockall::automock;
 pub trait TodoRepository {
     async fn get_all(&self) -> anyhow::Result<Vec<Todo>>;
     async fn insert(&self, source: NewTodo) -> anyhow::Result<()>;
+    async fn create_and_get_info(&self, source: NewTodo) -> anyhow::Result<Todo>;
 }

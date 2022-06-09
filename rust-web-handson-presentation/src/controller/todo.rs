@@ -143,14 +143,16 @@ mod tests {
             Some(mock_now.clone()),
         );
 
-        let expect_request: NewTodo =
-            NewTodo::new("sample title".to_string(), "sample description".to_string());
         let expect_result: anyhow::Result<Todo> = anyhow::Ok(select);
 
         mock_todo_usecase
             .expect_create_todo_and_get_info()
-            // .with(expect_request)
-            .return_once(|expect_request| expect_result);
+            .return_once(|actual_request| {
+                let expect_request: NewTodo =
+                    NewTodo::new("sample title".to_string(), "sample description".to_string());
+                assert_eq!(actual_request, expect_request);
+                expect_result
+            });
 
         mock_usecase_module
             .expect_todo_usecase()

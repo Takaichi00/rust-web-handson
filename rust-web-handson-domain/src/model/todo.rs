@@ -1,4 +1,3 @@
-
 use chrono::{DateTime, Local};
 use derive_new::new;
 
@@ -12,7 +11,7 @@ pub struct Todo {
     pub deleted_at: Option<DateTime<Local>>,
 }
 
-#[derive(new, Debug)]
+#[derive(new, Debug, PartialEq, Clone)]
 pub struct NewTodo {
     pub title: String,
     pub description: String,

@@ -84,7 +84,7 @@ mod test {
         let todo_usecase = UseCaseImpl::new(Arc::new(mock_repositories));
 
         // execte
-        let result = todo_usecase.get_list().await;
+        let result = todo_usecase.get_list().await.unwrap();
 
         let expect = vec![Todo::new(
             1,
@@ -96,6 +96,47 @@ mod test {
         )];
 
         // assert
-        assert_eq!(result.unwrap(), expect);
+        assert_eq!(result, expect);
+    }
+
+    #[tokio::test]
+    async fn test_NewTodoを作成して作成した結果を返す() -> () {
+        let mut mock_repositories = MockRepositoriesModuleExt::new();
+        let mut mock_todo_repo = MockTodoRepository::new();
+
+        // mock_todo_repo
+        //     .expect_get_all()
+        //     .return_once(|| expect_result);
+
+        // mock_repositories
+        //     .expect_todo_repository()
+        //     .once()
+        //     .return_const(mock_todo_repo);
+
+        let mock_now = Local
+            .datetime_from_str("2022/01/01 13:00:00", "%Y/%m/%d %H:%M:%S")
+            .unwrap();
+
+        let expect = Todo::new(
+            1,
+            "sample title".to_string(),
+            "sample description".to_string(),
+            mock_now.clone(),
+            mock_now.clone(),
+            Some(mock_now.clone()),
+        );
+
+        let new_todo = NewTodo::new("sample title".to_string(), "sample description".to_string());
+
+        let todo_usecase = UseCaseImpl::new(Arc::new(mock_repositories));
+
+        // execute
+        let result = todo_usecase
+            .create_todo_and_get_info(new_todo)
+            .await
+            .unwrap();
+
+        //assert
+        assert_eq!(result, expect);
     }
 }

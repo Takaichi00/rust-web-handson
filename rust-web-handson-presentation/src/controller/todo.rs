@@ -78,23 +78,33 @@ pub async fn create_try<U: UseCaseModulesExt>(
     Json(request_json): Json<TodoCreateRequestJson>,
     Extension(modules): Extension<Arc<U>>,
 ) -> Result<impl IntoResponse, StatusCode> {
-    // TODO 実装
-    if true {
-        let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(
-            1,
-            "hogehoge".to_string(),
-            "fugafuga".to_string(),
-            "2022-01-01 01:00:00".to_string(),
-        );
-        let body: Json<TodoCreateResponseJson> = Json(mock_response);
+    let result = modules
+        .todo_usecase()
+        .create_todo_and_get_info(NewTodo::from(request_json))
+        .await;
 
-        let mut headers = HeaderMap::new();
-        headers.insert("Location", "http://localhost:8080/todo/1".parse().unwrap());
+    match result {
+        Ok(_result) => {
+            let mock_response: TodoCreateResponseJson = TodoCreateResponseJson::new(
+                _result.id,
+                _result.title,
+                _result.description,
+                _result.created_at.to_string(),
+            );
+            let body: Json<TodoCreateResponseJson> = Json(mock_response);
 
-        return Ok((StatusCode::CREATED, headers, body));
+            let mut headers = HeaderMap::new();
+            let header_value =
+                String::from("http://localhost:8080/todo/") + &_result.id.to_string();
+            headers.insert("Location", header_value.parse().unwrap());
+
+            Ok((StatusCode::CREATED, headers, body))
+        }
+        Err(e) => {
+            tracing::error!("Error : {}", e);
+            Err(StatusCode::INTERNAL_SERVER_ERROR)
+        }
     }
-
-    return Err(StatusCode::INTERNAL_SERVER_ERROR);
 }
 
 #[cfg(test)]
@@ -124,24 +134,27 @@ mod tests {
             .datetime_from_str("2022/01/01 13:00:00", "%Y/%m/%d %H:%M:%S")
             .unwrap();
 
-        let select = vec![Todo::new(
+        let select = Todo::new(
             1,
-            "hoge".to_string(),
-            "fuga".to_string(),
+            "sample title".to_string(),
+            "sample description".to_string(),
             mock_now.clone(),
             mock_now.clone(),
             Some(mock_now.clone()),
-        )];
+        );
 
-        let expect_result: anyhow::Result<Vec<Todo>> = anyhow::Ok(select.to_vec());
+        let expect_request: NewTodo =
+            NewTodo::new("sample title".to_string(), "sample description".to_string());
+        let expect_result: anyhow::Result<Todo> = anyhow::Ok(select);
 
         mock_todo_usecase
-            .expect_get_list()
-            .return_once(|| expect_result);
+            .expect_create_todo_and_get_info()
+            // .with(expect_request)
+            .return_once(|expect_request| expect_result);
 
         mock_usecase_module
             .expect_todo_usecase()
-            // .once()
+            .once()
             .return_const(mock_todo_usecase);
 
         let modules = Arc::new(mock_usecase_module);
@@ -169,7 +182,7 @@ mod tests {
         let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
         println!("body: {:#?}", body);
 
-        assert_eq!(&body[..], b"{\"id\":1,\"title\":\"hogehoge\",\"description\":\"fugafuga\",\"created_at\":\"2022-01-01 01:00:00\"}");
+        assert_eq!(&body[..], b"{\"id\":1,\"title\":\"sample title\",\"description\":\"sample description\",\"created_at\":\"2022-01-01 13:00:00 +09:00\"}");
     }
 
     #[tokio::test]

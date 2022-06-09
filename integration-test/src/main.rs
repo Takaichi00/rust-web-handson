@@ -26,7 +26,7 @@ mod tests {
         let client = reqwest::Client::new();
         let res: Response = client
             .post("http://127.0.0.1:8080/todo/try")
-            .body("{ \"title\": \"hogehgoe\", \"description\": \"fugafuga\" }")
+            .body("{ \"title\": \"sample title\", \"description\": \"sample description\" }")
             .header("Content-Type", "application/json")
             .send()
             .await?;
@@ -40,8 +40,8 @@ mod tests {
 
         // テストケースごとにテストデータを用意できれば id なども検証できる (やる必要があるかは考えどころ)
         let response_json = res.json::<TodoCreateResponseJson>().await?;
-        assert_eq!(response_json.title, "hogehoge");
-        assert_eq!(response_json.description, "fugafuga");
+        assert_eq!(response_json.title, "sample title");
+        assert_eq!(response_json.description, "sample description");
         Ok(())
     }
 

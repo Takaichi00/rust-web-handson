@@ -30,36 +30,6 @@ mod tests {
             .header("Content-Type", "application/json")
             .send()
             .await?;
-        // 以下、i64 → String の キャストは勝手にやってくれなさそう
-        // .json::<HashMap<String, String>>()
-
-        assert_eq!(res.status().as_u16(), 201);
-        assert_eq!(res.headers().contains_key("Location"), true);
-        assert_eq!(
-            res.headers().get("Location").unwrap(),
-            &"http://localhost:8080/todo/1"
-        );
-
-        // テストケースごとにテストデータを用意できれば id なども検証できる (やる必要があるかは考えどころ)
-        let response_json = res.json::<TodoCreateResponseJson>().await?;
-        assert_eq!(response_json.title, "hogehoge");
-        assert_eq!(response_json.description, "fugafuga");
-        Ok(())
-    }
-
-    #[tokio::test]
-    async fn _201_todoを正常に作成することができる_2() -> anyhow::Result<()> {
-        initialize();
-
-        let client = reqwest::Client::new();
-        let res: Response = client
-            .post("http://127.0.0.1:8080/todo/try")
-            .body("{ \"title\": \"hogehgoe\", \"description\": \"fugafuga\" }")
-            .header("Content-Type", "application/json")
-            .send()
-            .await?;
-        // 以下、i64 → String の キャストは勝手にやってくれなさそう
-        // .json::<HashMap<String, String>>()
 
         assert_eq!(res.status().as_u16(), 201);
         assert_eq!(res.headers().contains_key("Location"), true);

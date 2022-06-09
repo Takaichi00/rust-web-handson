@@ -5,24 +5,24 @@ fn main() {
 #[cfg(test)]
 mod tests {
 
+    use once_cell::sync::OnceCell;
     use reqwest::Response;
     use rust_web_handson_presentation::model::todo_create_response::TodoCreateResponseJson;
-    use std::sync::Once;
 
-    static INIT: Once = Once::new();
-    // static INIT: Once = OnceCell::new(); → ライブリを入れる。こっちがモダン。lazy 、使われるまで評価しない (かも)
+    static INSTANCE: OnceCell<bool> = OnceCell::new();
 
     pub fn initialize() {
-        println!("Before Each");
-        INIT.call_once(|| {
+        INSTANCE.get_or_init(|| {
             println!("Before All");
+            true
         });
+        println!("Before Each");
     }
 
     #[tokio::test]
     async fn _201_todoを正常に作成することができる() -> anyhow::Result<()> {
         initialize();
-        println!("initialize end 1");
+
         let client = reqwest::Client::new();
         let res: Response = client
             .post("http://127.0.0.1:8080/todo/try")
@@ -50,7 +50,7 @@ mod tests {
     #[tokio::test]
     async fn _201_todoを正常に作成することができる_2() -> anyhow::Result<()> {
         initialize();
-        println!("initialize end 2");
+
         let client = reqwest::Client::new();
         let res: Response = client
             .post("http://127.0.0.1:8080/todo/try")
@@ -81,7 +81,7 @@ mod tests {
     #[test]
     fn sample_e2e_test_blocking() -> Result<(), Box<dyn std::error::Error>> {
         initialize();
-        println!("initialize end 3");
+
         let resp = reqwest::blocking::get("https://httpbin.org/get")?
             // .json::<String>()?;
             .text()?;

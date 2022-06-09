@@ -14,7 +14,7 @@ use super::UseCaseImpl;
 #[async_trait]
 pub trait TodoUseCase {
     async fn get_list(&self) -> anyhow::Result<Vec<Todo>>;
-    async fn create_todo(&self, new_todo: NewTodo) -> anyhow::Result<()>;
+    async fn create_todo(&self, new_todo: NewTodo) -> anyhow::Result<i64>;
     async fn create_todo_and_get_info(&self, new_todo: NewTodo) -> anyhow::Result<(Todo)>;
 }
 
@@ -25,7 +25,7 @@ impl<R: RepositoriesModuleExt + Sync + Send> TodoUseCase for UseCaseImpl<Todo, R
         self.repositories.todo_repository().get_all().await
     }
 
-    async fn create_todo(&self, new_todo: NewTodo) -> anyhow::Result<()> {
+    async fn create_todo(&self, new_todo: NewTodo) -> anyhow::Result<i64> {
         self.repositories.todo_repository().insert(new_todo).await
     }
 

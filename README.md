@@ -7,11 +7,11 @@
 
 ### Sql Migrate
 
-rdsのmigrateにsql-cliを利用しています。
+rdsのmigrateにsqlx-cliを利用しています。
 cargoによりインストールしてください。
 
 ```bash
-cargo install sql-cli
+cargo install sqlx-cli
 ```
 
 ### Middleware

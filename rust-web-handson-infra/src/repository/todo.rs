@@ -4,7 +4,7 @@ use rust_web_handson_domain::{
     model::todo::{NewTodo, Todo},
     repository::todo::TodoRepository,
 };
-use sqlx::query_as;
+use sqlx::{mysql::MySqlQueryResult, query_as};
 
 use crate::dao::todo::TodoTable;
 
@@ -31,18 +31,33 @@ impl TodoRepository for RdsRepositoryImpl<Todo> {
     }
 
     async fn create_and_get_info(&self, source: NewTodo) -> anyhow::Result<Todo> {
-        let mock_now = Local
-            .datetime_from_str("2022/01/01 13:00:00", "%Y/%m/%d %H:%M:%S")
-            .unwrap();
-        let mock_expect = Todo::new(
-            1,
-            "sample title".to_string(),
-            "sample description".to_string(),
-            mock_now.clone(),
-            mock_now.clone(),
-            Some(mock_now.clone()),
-        );
-        anyhow::Ok(mock_expect)
+        let pool = self.pool.0.clone();
+        let result: MySqlQueryResult =
+            sqlx::query("insert into todo (title, description) values (?, ?)")
+                .bind(source.title)
+                .bind(source.description)
+                .execute(&*pool)
+                .await?;
+
+        let todo = query_as::<_, TodoTable>("select * from todo where id=?")
+            .bind(result.last_insert_id())
+            .fetch_one(&*pool)
+            .await?;
+
+        Todo::try_from(todo)
+
+        // let mock_now = Local
+        //     .datetime_from_str("2022/01/01 13:00:00", "%Y/%m/%d %H:%M:%S")
+        //     .unwrap();
+        // let mock_expect = Todo::new(
+        //     1,
+        //     "sample title".to_string(),
+        //     "sample description".to_string(),
+        //     mock_now.clone(),
+        //     mock_now.clone(),
+        //     Some(mock_now.clone()),
+        // );
+        // anyhow::Ok(mock_expect)
     }
 }
 
@@ -54,6 +69,7 @@ mod test {
 
     #[tokio::test]
     async fn test_get_all() -> () {
+        dotenv::from_filename(".env_test");
         let rds = Rds::new().await;
         let todo_repository: RdsRepositoryImpl<Todo> = RdsRepositoryImpl::new(rds);
         let result_list = todo_repository.get_all().await.unwrap();

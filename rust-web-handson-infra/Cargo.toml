@@ -15,3 +15,4 @@ mockall_double = "0.3.0"
 rust-web-handson-domain = {path = "../rust-web-handson-domain"}
 sqlx = {version = "0.5", features = ["runtime-tokio-rustls", "mysql", "chrono"]}
 tokio = {version = "1.18.2", features = ["rt", "macros", "test-util"]}
+dotenv = "0.15.0"

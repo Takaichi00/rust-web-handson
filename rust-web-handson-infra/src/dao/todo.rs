@@ -10,14 +10,12 @@ pub struct TodoTable {
     pub updated_at: DateTime<Local>,
     pub deleted_at: Option<DateTime<Local>>,
 }
-// TodoTable.from(Row) 
-
+// TodoTable.from(Row)
 
 // Trait がデフォで用意されている
 // From, TryFrom → 共通の Interface のようなもの
 // ドメインモデルのメソッドとして用意している
 impl TryFrom<TodoTable> for Todo {
-
     // try_from なので、Error のときの型を指定する必要がある
     // anyhow::Error の実体は standard IO Error → rust 標準 error の wrapper
     // Error には色々型があるが、いちいち定義するのはめんどくさいので、すべての Error を解決できる anyhow::Error を使っている

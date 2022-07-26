@@ -18,4 +18,4 @@ jobs:
           ref: "master"
           path: "rust-web-handson.wiki"
       - name: Update summary.md if needed
-        run: ls -al $GITHUB_WORKSPACE/my-repo.wiki
+        run: ls -al $GITHUB_WORKSPACE/ust-web-handson.wiki

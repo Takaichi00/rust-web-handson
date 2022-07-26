@@ -1,0 +1,21 @@
+name: Sample
+
+on:
+  gollum:
+  workflow_dispatch:
+
+jobs:
+  create-wiki-summary:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+      - name: Check out wiki
+        uses: actions/checkout@v2
+        with:
+          repository: "iterable-company/rust-web-handson.wiki"
+          ref: "master"
+          path: "rust-web-handson.wiki"
+      - name: Update summary.md if needed
+        run: ls -al $GITHUB_WORKSPACE/my-repo.wiki

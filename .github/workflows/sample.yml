@@ -14,8 +14,8 @@ jobs:
       - name: Check out wiki
         uses: actions/checkout@v2
         with:
-          repository: "iterable-company/rust-web-handson.wiki"
+          repository: "iterable-company/rust-web-handson"
           ref: "master"
           path: "rust-web-handson.wiki"
       - name: Update summary.md if needed
-        run: ls -al $GITHUB_WORKSPACE/ust-web-handson.wiki
+        run: ls -al $GITHUB_WORKSPACE

@@ -18,4 +18,4 @@ jobs:
           ref: "master"
           path: "rust-web-handson.wiki"
       - name: Update summary.md if needed
-        run: ls -al $GITHUB_WORKSPACE/rust-web-handson.wiki
+        run: cp $GITHUB_WORKSPACE/migrations/images/adgroups_cpvs.1degree.svg adgroups_cpvs.1degree.svg

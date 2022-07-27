@@ -26,3 +26,4 @@ jobs:
           git add relationships.real.large.svg
           git commit -m"update er-diagram"
           git push origin master
+          ls -al rust-web-handson.wiki

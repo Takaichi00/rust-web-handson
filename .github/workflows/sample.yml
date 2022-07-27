@@ -25,3 +25,4 @@ jobs:
           git config --global user.name "Github Actions"
           ls -al .
           cargo --version
+          java -version

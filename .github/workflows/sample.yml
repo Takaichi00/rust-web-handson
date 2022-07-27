@@ -7,6 +7,19 @@ on:
 jobs:
   create-wiki-summary:
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: web_handson
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Check out repo
@@ -25,4 +38,6 @@ jobs:
           git config --global user.name "Github Actions"
           ls -al .
           cargo --version
-          java -version
+          cargo install sqlx-cli
+          export DATABASE_URL=mysql://root:password@localhost/web_handson
+          sqlx migrate run --source ./migrations/schema --ignore-missing

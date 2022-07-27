@@ -10,7 +10,7 @@ on:
       - migrations/schema/**
 
 jobs:
-  update-wiki:
+  update-table-definitions:
     runs-on: ubuntu-latest
     services:
       db:

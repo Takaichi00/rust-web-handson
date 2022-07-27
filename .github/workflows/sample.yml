@@ -24,3 +24,4 @@ jobs:
           git config --global user.email "lodeo_engineer@cyberagent.co.jp"
           git config --global user.name "Github Actions"
           ls -al .
+          cargo --version

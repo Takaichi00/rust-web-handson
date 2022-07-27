@@ -21,6 +21,8 @@ jobs:
         run: |
           cp $GITHUB_WORKSPACE/migrations/images/relationships.real.large.svg rust-web-handson.wiki/relationships.real.large.svg
           cd rust-web-handson.wiki
+          git config --global user.email "lodeo_engineer@cyberagent.co.jp"
+          git config --global user.name "Github Actions"
           git add relationships.real.large.svg
           git commit -m"update er-diagram"
           git push origin master

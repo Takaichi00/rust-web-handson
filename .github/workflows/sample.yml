@@ -44,5 +44,16 @@ jobs:
           wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.30.zip
           unzip mysql-connector-java-8.0.30.zip
           cp mysql-connector-java-8.0.30/mysql-connector-java-8.0.30.jar  drivers/mysql
+          echo -e "
+          schemaspy.t=mysql\n
+          schemaspy.dp=drivers\n
+          schemaspy.host=db\n
+          schemaspy.port=3306\n
+          schemaspy.db=web_handson\n
+          schemaspy.u=root\n
+          schemaspy.p=password\n
+          schemaspy.o=./output\n
+          schemaspy.s=web_handson\n
+          " > schemaspy.properties
           java -jar schemaspy-6.1.0.jar -vizjs
           cp output/diagrams/summary/relationships.real.large.svg $GITHUB_WORKSPACE/rust-web-handson.wiki/relationships.real.large.svg

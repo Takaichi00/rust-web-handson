@@ -41,4 +41,5 @@ jobs:
           mkdir output
           mkdir -p drivers/mysql
           wget https://github.com/schemaspy/schemaspy/releases/download/v6.1.0/schemaspy-6.1.0.jar
-          wget https://dev.mysql.com/downloads/file/?id=513220
+          wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.30.zip
+          unzip mysql-connector-java-8.0.30.zip

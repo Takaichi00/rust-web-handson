@@ -1,4 +1,4 @@
-name: Sample
+name: Update table definitions
 
 on:
   gollum:
@@ -29,12 +29,6 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
-      - name: Check out wiki
-        uses: actions/checkout@v2
-        with:
-          repository: "iterable-company/rust-web-handson.wiki"
-          ref: "master"
-          path: "rust-web-handson.wiki"
       - name: Cache rust binary
         uses: actions/cache@v3
         id: cache
@@ -53,7 +47,8 @@ jobs:
           sqlx migrate run --source $GITHUB_WORKSPACE/migrations/schema --ignore-missing
       - name: Generate schema definitions
         run: |
-          mkdir -p docs
+          rm -rf docs
+          mkdir docs
           mkdir -p drivers/mysql
           wget https://github.com/schemaspy/schemaspy/releases/download/v6.1.0/schemaspy-6.1.0.jar
           wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.30.zip
@@ -76,5 +71,5 @@ jobs:
           git config --global user.email "lodeo_engineer@cyberagent.co.jp"
           git config --global user.name "Github Actions"
           git add docs
-          git commit -m "Update Summary.md at $(date)"
+          git commit -m "Update table definitions"
           git push origin master

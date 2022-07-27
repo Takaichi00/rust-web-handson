@@ -7,7 +7,7 @@ on:
     branches:
       - "master"
     paths:
-      - migrations/schema
+      - migrations/schema/**
 
 jobs:
   update-wiki:
@@ -35,7 +35,8 @@ jobs:
           repository: "iterable-company/rust-web-handson.wiki"
           ref: "master"
           path: "rust-web-handson.wiki"
-      - uses: actions/cache@v3
+      - name: Cache rust binary
+        uses: actions/cache@v3
         id: cache
         with:
           path: |
@@ -77,4 +78,4 @@ jobs:
       - name: Update ER-Diagram
         run: |
           ls -al rust-web-handson.wiki
-          cp output/diagrams/summary/relationships.real.large.svg $GITHUB_WORKSPACE/rust-web-handson.wiki/relationships.real.large.svg
+          cp /tmp/output/diagrams/summary/relationships.real.large.svg $GITHUB_WORKSPACE/rust-web-handson.wiki/relationships.real.large.svg

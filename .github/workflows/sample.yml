@@ -74,4 +74,7 @@ jobs:
           ls -r output
           ls -r output/diagrams
           ls -r output/diagrams/summary/
-          # cp output/diagrams/summary/relationships.real.large.svg $GITHUB_WORKSPACE/rust-web-handson.wiki/relationships.real.large.svg
+      - name: Update ER-Diagram
+        run: |
+          ls -al rust-web-handson.wiki
+          cp output/diagrams/summary/relationships.real.large.svg $GITHUB_WORKSPACE/rust-web-handson.wiki/relationships.real.large.svg

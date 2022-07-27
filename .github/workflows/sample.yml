@@ -67,7 +67,7 @@ jobs:
           schemaspy.db=web_handson\n
           schemaspy.u=root\n
           schemaspy.p=password\n
-          schemaspy.o=./table-definitions\n
+          schemaspy.o=./docs\n
           schemaspy.s=web_handson\n
           " > schemaspy.properties
           java -jar schemaspy-6.1.0.jar -vizjs
@@ -75,6 +75,6 @@ jobs:
         run: |
           git config --global user.email "lodeo_engineer@cyberagent.co.jp"
           git config --global user.name "Github Actions"
-          git add table-definitions
+          git add docs
           git commit -m "Update Summary.md at $(date)"
           git push origin master

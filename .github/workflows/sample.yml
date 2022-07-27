@@ -3,9 +3,14 @@ name: Sample
 on:
   gollum:
   workflow_dispatch:
+  push:
+    branches:
+      - "main"
+    paths:
+      - migrations/schema
 
 jobs:
-  create-wiki-summary:
+  update-wiki:
     runs-on: ubuntu-latest
     services:
       db:

@@ -47,7 +47,7 @@ jobs:
           echo -e "
           schemaspy.t=mysql\n
           schemaspy.dp=drivers\n
-          schemaspy.host=db\n
+          schemaspy.host=localhost\n
           schemaspy.port=3306\n
           schemaspy.db=web_handson\n
           schemaspy.u=root\n

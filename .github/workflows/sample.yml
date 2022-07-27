@@ -35,7 +35,9 @@ jobs:
         with:
           path: |
             ~/.cargo/bin/
+            ~/.cargo/registry/cache/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
       - name: Install sqlx
         if: steps.cache.outputs.cache-hit != 'true'
         run: cargo install sqlx-cli

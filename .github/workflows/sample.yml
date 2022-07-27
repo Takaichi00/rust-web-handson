@@ -53,8 +53,7 @@ jobs:
           sqlx migrate run --source $GITHUB_WORKSPACE/migrations/schema --ignore-missing
       - name: Generate schema definitions
         run: |
-          cd /tmp
-          mkdir output
+          mkdir table-definitions
           mkdir -p drivers/mysql
           wget https://github.com/schemaspy/schemaspy/releases/download/v6.1.0/schemaspy-6.1.0.jar
           wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.30.zip
@@ -68,14 +67,14 @@ jobs:
           schemaspy.db=web_handson\n
           schemaspy.u=root\n
           schemaspy.p=password\n
-          schemaspy.o=./output\n
+          schemaspy.o=./table-definitions\n
           schemaspy.s=web_handson\n
           " > schemaspy.properties
           java -jar schemaspy-6.1.0.jar -vizjs
-          ls -r output
-          ls -r output/diagrams
-          ls -r output/diagrams/summary/
-      - name: Update ER-Diagram
+      - name: Update table definitions
         run: |
-          ls -al rust-web-handson.wiki
-          cp /tmp/output/diagrams/summary/relationships.real.large.svg $GITHUB_WORKSPACE/rust-web-handson.wiki/relationships.real.large.svg
+          git config --global user.email "lodeo_engineer@cyberagent.co.jp"
+          git config --global user.name "Github Actions"
+          git add table-definitions
+          git commit -m "Update Summary.md at $(date)"
+          git push origin master

@@ -18,4 +18,9 @@ jobs:
           ref: "master"
           path: "rust-web-handson.wiki"
       - name: Update summary.md if needed
-        run: cp $GITHUB_WORKSPACE/migrations/images/relationships.real.large.svg rust-web-handson.wiki/relationships.real.large.svg
+        run: |
+        cp $GITHUB_WORKSPACE/migrations/images/relationships.real.large.svg rust-web-handson.wiki/relationships.real.large.svg
+        cd rust-web-handson.wiki
+        git add relationships.real.large.svg
+        git commit -m"update er-diagram"
+        git push origin master

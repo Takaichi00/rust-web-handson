@@ -23,8 +23,9 @@ jobs:
           cd rust-web-handson.wiki
           git config --global user.email "lodeo_engineer@cyberagent.co.jp"
           git config --global user.name "Github Actions"
+          git rm fuga.html
           echo "<html><body><p>fuga</p></body></html>" > fuga.html
           git add fuga.html
           git commit -m"update fuga"
           git push origin master
-          ls -al rust-web-handson.wiki
+          ls -al .

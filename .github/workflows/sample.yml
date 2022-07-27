@@ -53,7 +53,7 @@ jobs:
           sqlx migrate run --source $GITHUB_WORKSPACE/migrations/schema --ignore-missing
       - name: Generate schema definitions
         run: |
-          mkdir table-definitions
+          mkdir -p docs
           mkdir -p drivers/mysql
           wget https://github.com/schemaspy/schemaspy/releases/download/v6.1.0/schemaspy-6.1.0.jar
           wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.30.zip

@@ -62,5 +62,3 @@ jobs:
           " > schemaspy.properties
           java -jar schemaspy-6.1.0.jar -vizjs
           cp output/diagrams/summary/relationships.real.large.svg $GITHUB_WORKSPACE/rust-web-handson.wiki/relationships.real.large.svg
-      - name: Update ER-Diagram
-        run: |

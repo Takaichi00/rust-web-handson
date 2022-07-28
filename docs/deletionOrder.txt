@@ -1,2 +1,10 @@
-others
-todo
+seaql_migrations
+adgroups_locations
+signages
+advertiser_users
+ads
+locations
+adgroups
+campaigns
+location_owners
+advertisers

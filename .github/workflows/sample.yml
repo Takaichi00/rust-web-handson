@@ -70,7 +70,7 @@ jobs:
           schemaspy.o=./docs_branch/docs\n
           schemaspy.s=lodeo\n
           " > schemaspy.properties
-          java -jar schemaspy-6.1.0.jar -norows -vizjs
+          java -jar schemaspy-6.1.0.jar -norows -I seaql_migrations -vizjs
       - name: Update document of table definitions
         run: |
           cd $GITHUB_WORKSPACE/docs_branch

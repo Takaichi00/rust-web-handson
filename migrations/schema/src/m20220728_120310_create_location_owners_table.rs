@@ -16,6 +16,7 @@ impl MigrationTrait for Migration {
                 hoge varchar(255) not null,
                 don varchar(255) not null,
                 pappa varchar(255) not null,
+                fizz varchar(255) not null,
                 is_test tinyint(1) not null,
                 created_at datetime not null default current_timestamp,
                 updated_at datetime not null default current_timestamp on update current_timestamp,

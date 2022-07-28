@@ -37,7 +37,7 @@ jobs:
             ~/.cargo/bin/
             ~/.cargo/registry/index/
             ~/.cargo/registry/cache/
-          key: ${{ runner.os }}-cargo-${{ hashFiles( $GITHUB_WORKSPACE + '/migrations/Cargo.toml') }}
+          key: ${{ runner.os }}-cargo-${{ hashFiles( '$GITHUB_WORKSPACE/migrations/Cargo.toml') }}
       - name: Create docs branch if needed
         run: |
           git fetch --all

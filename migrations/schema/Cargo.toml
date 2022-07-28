@@ -1,0 +1,19 @@
+[package]
+edition = "2021"
+name = "schema"
+publish = false
+version = "0.1.0"
+
+[lib]
+name = "migration"
+path = "src/lib.rs"
+
+[dependencies]
+async-std = {version = "^1", features = ["attributes", "tokio1"]}
+
+[dependencies.sea-orm-migration]
+features = [
+  "runtime-tokio-native-tls",
+  "sqlx-mysql",
+]
+version = "^0.9.0"

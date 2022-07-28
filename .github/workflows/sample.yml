@@ -38,15 +38,13 @@ jobs:
             ~/.cargo/registry/cache/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
-      - name: Install sqlx
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: cargo install sqlx-cli
       - name: Migrate
         run: |
           export DATABASE_URL=mysql://root:password@localhost/lodeo
-          sqlx migrate run --source $GITHUB_WORKSPACE/migrations/schema --ignore-missing
+          cargo run -p schema
       - name: Generate schema definitions
         run: |
+          cd $GITHUB_WORKSPACE
           rm -rf docs
           mkdir docs
           mkdir -p drivers/mysql
@@ -65,7 +63,7 @@ jobs:
           schemaspy.o=./docs\n
           schemaspy.s=lodeo\n
           " > schemaspy.properties
-          java -jar schemaspy-6.1.0.jar -I _sqlx_migrations -vizjs
+          java -jar schemaspy-6.1.0.jar -norows -vizjs
       - name: Update document of table definitions
         run: |
           git config --global user.email "lodeo_engineer@cyberagent.co.jp"

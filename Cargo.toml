@@ -5,5 +5,7 @@ members = [
   "rust-web-handson-domain",
   "rust-web-handson-infra",
   "rust-web-handson-util",
+  "migrations/schema",
+  "migrations/test-data",
   "integration-test",
 ]

@@ -37,7 +37,6 @@ jobs:
             ~/.cargo/bin/
             ~/.cargo/registry/cache/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
       - name: Migrate
         run: |
           export DATABASE_URL=mysql://root:password@localhost/lodeo

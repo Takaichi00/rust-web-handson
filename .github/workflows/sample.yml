@@ -80,6 +80,6 @@ jobs:
           cd $GITHUB_WORKSPACE/docs_branch
           git config --global user.email "lodeo_engineer@cyberagent.co.jp"
           git config --global user.name "Github Actions"
-          git add docs
+          git add --all
           num=`git diff --name-only --cached | wc -l | sed 's/^ *//g'`
           test $num -gt 0 && git commit -m"Update table definitions" && git push origin docs

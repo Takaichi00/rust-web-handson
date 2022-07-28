@@ -1,4 +1,4 @@
-name: Update table definitions
+name: Update documents of table definitions
 
 on:
   gollum:
@@ -10,7 +10,7 @@ on:
       - migrations/schema/**
 
 jobs:
-  update-table-definitions:
+  update-docs:
     runs-on: ubuntu-latest
     services:
       db:
@@ -19,7 +19,7 @@ jobs:
           - 3306:3306
         env:
           MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: web_handson
+          MYSQL_DATABASE: lodeo
         options: >-
           --health-cmd "mysqladmin ping"
           --health-interval 10s
@@ -43,7 +43,7 @@ jobs:
         run: cargo install sqlx-cli
       - name: Migrate
         run: |
-          export DATABASE_URL=mysql://root:password@localhost/web_handson
+          export DATABASE_URL=mysql://root:password@localhost/lodeo
           sqlx migrate run --source $GITHUB_WORKSPACE/migrations/schema --ignore-missing
       - name: Generate schema definitions
         run: |
@@ -59,14 +59,14 @@ jobs:
           schemaspy.dp=drivers\n
           schemaspy.host=localhost\n
           schemaspy.port=3306\n
-          schemaspy.db=web_handson\n
+          schemaspy.db=lodeo\n
           schemaspy.u=root\n
           schemaspy.p=password\n
           schemaspy.o=./docs\n
-          schemaspy.s=web_handson\n
+          schemaspy.s=lodeo\n
           " > schemaspy.properties
-          java -jar schemaspy-6.1.0.jar -vizjs
-      - name: Update table definitions
+          java -jar schemaspy-6.1.0.jar -I _sqlx -vizjs
+      - name: Update document of table definitions
         run: |
           git config --global user.email "lodeo_engineer@cyberagent.co.jp"
           git config --global user.name "Github Actions"

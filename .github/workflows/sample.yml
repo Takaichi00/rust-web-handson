@@ -29,6 +29,14 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
+      - name: Check out docs branch
+        uses: actions/checkout@v2
+        with:
+          ref: "docs"
+          path: "docs_branch"
+        run: |
+          cd $GITHUB_WORKSPACE/docs_branch
+          rm -rf ./*
       - name: Cache rust binary
         uses: actions/cache@v3
         id: cache
@@ -39,13 +47,13 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Migrate
         run: |
+          cd $GITHUB_WORKSPACE
           export DATABASE_URL=mysql://root:password@localhost/lodeo
           cargo run -p schema
       - name: Generate schema definitions
         run: |
           cd $GITHUB_WORKSPACE
-          rm -rf docs
-          mkdir docs
+          mkdir -p docs_branch/docs
           mkdir -p drivers/mysql
           wget https://github.com/schemaspy/schemaspy/releases/download/v6.1.0/schemaspy-6.1.0.jar
           wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.30.zip
@@ -59,14 +67,15 @@ jobs:
           schemaspy.db=lodeo\n
           schemaspy.u=root\n
           schemaspy.p=password\n
-          schemaspy.o=./docs\n
+          schemaspy.o=./docs_branch/docs\n
           schemaspy.s=lodeo\n
           " > schemaspy.properties
           java -jar schemaspy-6.1.0.jar -norows -vizjs
       - name: Update document of table definitions
         run: |
+          cd $GITHUB_WORKSPACE/docs_branch
           git config --global user.email "lodeo_engineer@cyberagent.co.jp"
           git config --global user.name "Github Actions"
           git add docs
           num=`git diff --name-only --cached | wc -l | sed 's/^ *//g'`
-          test $num -gt 0 && git commit -m"Update table definitions" && git push origin master
+          test $num -gt 0 && git commit -m"Update table definitions" && git push origin docs

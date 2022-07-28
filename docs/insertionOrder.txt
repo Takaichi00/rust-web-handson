@@ -1,3 +1,2 @@
 todo
 others
-_sqlx_migrations

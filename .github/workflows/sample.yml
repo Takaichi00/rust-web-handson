@@ -29,6 +29,15 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
+      - name: Cache rust binary
+        uses: actions/cache@v3
+        id: cache
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('~/migrations/Cargo.toml') }}
       - name: Create docs branch if needed
         run: |
           git fetch --all
@@ -38,19 +47,10 @@ jobs:
         with:
           ref: "docs"
           path: "docs_branch"
-      - name: Clean up docs repository
+      - name: Clean up docs branch
         run: |
           cd $GITHUB_WORKSPACE/docs_branch
           rm -rf ./*
-      - name: Cache rust binary
-        uses: actions/cache@v3
-        id: cache
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/migrations/Cargo.toml') }}
       - name: Migrate
         run: |
           cd $GITHUB_WORKSPACE

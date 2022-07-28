@@ -14,6 +14,7 @@ impl MigrationTrait for Migration {
                 id int(11) not null auto_increment,
                 name varchar(255) not null,
                 hoge varchar(255) not null,
+                fuga varchar(255) not null,
                 is_test tinyint(1) not null,
                 created_at datetime not null default current_timestamp,
                 updated_at datetime not null default current_timestamp on update current_timestamp,

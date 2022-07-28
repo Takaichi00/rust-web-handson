@@ -13,6 +13,7 @@ impl MigrationTrait for Migration {
             create table locations (
                 id int(11) not null auto_increment,
                 location_owner_id int(11) not null,
+                hoge varchar(255) null,
                 name varchar(255) not null,
                 address varchar(255) null,
                 latitude double null,

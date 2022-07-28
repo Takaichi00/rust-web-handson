@@ -34,6 +34,7 @@ jobs:
         with:
           ref: "docs"
           path: "docs_branch"
+      - name: Clean up docs repository
         run: |
           cd $GITHUB_WORKSPACE/docs_branch
           rm -rf ./*

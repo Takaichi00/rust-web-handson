@@ -29,6 +29,9 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
+      - name: Create docs branch if needed
+        run: |
+          git show-ref --verify --quiet 'refs/heads/feat/docs' || ( git checkout -b docs && git push origin docs && git checkout - )
       - name: Check out docs branch
         uses: actions/checkout@v2
         with:

@@ -6,6 +6,7 @@ create table others (
     description text,
     hoge varchar(255),
     fuga varchar(255),
+    don varchar(255),
     created_at datetime default current_timestamp,
     updated_at datetime default current_timestamp on update current_timestamp,
     deleted_at datetime default null,

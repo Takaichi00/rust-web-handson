@@ -1,40 +1,207 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <database name="lodeo" schema="lodeo" type="MySQL - 8.0.30">
    <tables>
-      <table catalog="lodeo" name="others" numRows="0" remarks="" type="TABLE">
-         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="BIGINT" typeCode="-5"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="todo_id" nullable="true" remarks="" size="19" type="BIGINT" typeCode="-5">
-            <parent catalog="lodeo" column="id" foreignKey="others_ibfk_1" implied="false" onDeleteCascade="false" table="todo"/>
+      <table catalog="lodeo" name="adgroups" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <child catalog="lodeo" column="adgroup_id" foreignKey="adgroups_locations_ibfk_1" implied="false" onDeleteCascade="false" table="adgroups_locations"/>
+            <child catalog="lodeo" column="adgroup_id" foreignKey="ads_ibfk_1" implied="false" onDeleteCascade="false" table="ads"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="title" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="description" nullable="true" remarks="" size="65535" type="TEXT" typeCode="-1"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="hoge" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="fuga" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="don" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="pappa" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="8" name="created_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="9" name="updated_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="deleted_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="campaign_id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <parent catalog="lodeo" column="id" foreignKey="adgroups_ibfk_1" implied="false" onDeleteCascade="false" table="campaigns"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="status" nullable="false" remarks="" size="1" type="BIT" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="start_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="end_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="max_total_budget" nullable="true" remarks="" size="19" type="BIGINT" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="max_monthly_budget" nullable="true" remarks="" size="19" type="BIGINT" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="max_daily_budget" nullable="true" remarks="" size="19" type="BIGINT" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="max_hourly_budget" nullable="true" remarks="" size="1073741824" type="JSON" typeCode="-1"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="10" name="cpv" nullable="false" remarks="" size="20" type="DECIMAL" typeCode="3"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="11" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="12" name="updated_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="deleted_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="PRIMARY" unique="true">
             <column ascending="true" name="id"/>
          </index>
-         <index name="fk_todo_id" unique="false">
-            <column ascending="true" name="todo_id"/>
+         <index name="fk_campaign_id" unique="false">
+            <column ascending="true" name="campaign_id"/>
          </index>
       </table>
-      <table catalog="lodeo" name="todo" numRows="0" remarks="" type="TABLE">
-         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="BIGINT" typeCode="-5">
-            <child catalog="lodeo" column="todo_id" foreignKey="others_ibfk_1" implied="false" onDeleteCascade="false" table="others"/>
+      <table catalog="lodeo" name="adgroups_locations" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="adgroup_id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <parent catalog="lodeo" column="id" foreignKey="adgroups_locations_ibfk_1" implied="false" onDeleteCascade="false" table="adgroups"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="title" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="description" nullable="true" remarks="" size="65535" type="TEXT" typeCode="-1"/>
-         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="3" name="created_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="4" name="updated_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="location_id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <parent catalog="lodeo" column="id" foreignKey="adgroups_locations_ibfk_2" implied="false" onDeleteCascade="false" table="locations"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="3" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="4" name="updated_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="deleted_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="PRIMARY" unique="true">
             <column ascending="true" name="id"/>
+         </index>
+         <index name="fk_adgroup_id" unique="false">
+            <column ascending="true" name="adgroup_id"/>
+         </index>
+         <index name="fk_location_id" unique="false">
+            <column ascending="true" name="location_id"/>
+         </index>
+      </table>
+      <table catalog="lodeo" name="ads" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="adgroup_id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <parent catalog="lodeo" column="id" foreignKey="ads_ibfk_1" implied="false" onDeleteCascade="false" table="adgroups"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="status" nullable="false" remarks="" size="1" type="BIT" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="start_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="end_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="movie_sec" nullable="true" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="content_path" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="width" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="height" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="10" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="11" name="updated_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="deleted_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="fk_adgroup_id" unique="false">
+            <column ascending="true" name="adgroup_id"/>
+         </index>
+      </table>
+      <table catalog="lodeo" name="advertiser_users" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="advertiser_id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <parent catalog="lodeo" column="id" foreignKey="advertiser_users_ibfk_1" implied="false" onDeleteCascade="false" table="advertisers"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="login_name" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="email" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="encrypted_password" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="last_sign_in_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="6" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="7" name="updated_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="deleted_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="fk_advertiser_id" unique="false">
+            <column ascending="true" name="advertiser_id"/>
+         </index>
+      </table>
+      <table catalog="lodeo" name="advertisers" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <child catalog="lodeo" column="advertiser_id" foreignKey="advertiser_users_ibfk_1" implied="false" onDeleteCascade="false" table="advertiser_users"/>
+            <child catalog="lodeo" column="advertiser_id" foreignKey="campaigns_ibfk_1" implied="false" onDeleteCascade="false" table="campaigns"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="domain" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="is_test" nullable="false" remarks="" size="1" type="BIT" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="4" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="5" name="updated_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="deleted_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table catalog="lodeo" name="campaigns" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <child catalog="lodeo" column="campaign_id" foreignKey="adgroups_ibfk_1" implied="false" onDeleteCascade="false" table="adgroups"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="advertiser_id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <parent catalog="lodeo" column="id" foreignKey="campaigns_ibfk_1" implied="false" onDeleteCascade="false" table="advertisers"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="status" nullable="false" remarks="" size="1" type="BIT" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="start_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="end_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="3" id="6" name="revenue_share_rate" nullable="false" remarks="" size="20" type="DECIMAL" typeCode="3"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="max_total_budget" nullable="true" remarks="" size="19" type="BIGINT" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="max_monthly_budget" nullable="true" remarks="" size="19" type="BIGINT" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="max_daily_budget" nullable="true" remarks="" size="19" type="BIGINT" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="max_hourly_budget" nullable="true" remarks="" size="1073741824" type="JSON" typeCode="-1"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="frequency_control_interval_sec" nullable="true" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="12" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="13" name="updated_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="deleted_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="fk_advertiser_id" unique="false">
+            <column ascending="true" name="advertiser_id"/>
+         </index>
+      </table>
+      <table catalog="lodeo" name="location_owners" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <child catalog="lodeo" column="location_owner_id" foreignKey="locations_ibfk_1" implied="false" onDeleteCascade="false" table="locations"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="hoge" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="is_test" nullable="false" remarks="" size="1" type="BIT" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="4" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="5" name="updated_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="deleted_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table catalog="lodeo" name="locations" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <child catalog="lodeo" column="location_id" foreignKey="adgroups_locations_ibfk_2" implied="false" onDeleteCascade="false" table="adgroups_locations"/>
+            <child catalog="lodeo" column="location_id" foreignKey="signages_ibfk_1" implied="false" onDeleteCascade="false" table="signages"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="location_owner_id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <parent catalog="lodeo" column="id" foreignKey="locations_ibfk_1" implied="false" onDeleteCascade="false" table="location_owners"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="address" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="latitude" nullable="true" remarks="" size="22" type="DOUBLE" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="longitude" nullable="true" remarks="" size="22" type="DOUBLE" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="6" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="7" name="updated_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="deleted_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="fk_location_owner_id" unique="false">
+            <column ascending="true" name="location_owner_id"/>
+         </index>
+      </table>
+      <table catalog="lodeo" name="seaql_migrations" numRows="9" remarks="" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="version" nullable="false" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="applied_at" nullable="false" remarks="" size="19" type="BIGINT" typeCode="-5"/>
+         <primaryKey column="version" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="version"/>
+         </index>
+      </table>
+      <table catalog="lodeo" name="signages" remarks="" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="location_id" nullable="false" remarks="" size="10" type="INT" typeCode="4">
+            <parent catalog="lodeo" column="id" foreignKey="signages_ibfk_1" implied="false" onDeleteCascade="false" table="locations"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="hashkey" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="external_id" nullable="true" remarks="" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="is_active" nullable="false" remarks="" size="1" type="BIT" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="5" name="created_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="6" name="updated_at" nullable="false" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="deleted_at" nullable="true" remarks="" size="19" type="DATETIME" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="fk_location_id" unique="false">
+            <column ascending="true" name="location_id"/>
          </index>
       </table>
    </tables>
